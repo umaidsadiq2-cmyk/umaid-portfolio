@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const EXTS = [".webp", ".jpg", ".jpeg", ".png", ".avif"];
@@ -40,6 +40,14 @@ export function Photo({
   const sources = candidates(src);
   const [idx, setIdx] = useState(0);
   const [state, setState] = useState<"loading" | "ok" | "error">("loading");
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // If the image already finished loading before hydration, onLoad won't fire —
+  // detect that here so the photo isn't stuck invisible.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) setState("ok");
+  }, [idx]);
 
   const handleError = () => {
     if (idx < sources.length - 1) {
@@ -64,6 +72,7 @@ export function Photo({
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={imgRef}
         key={sources[idx]}
         src={sources[idx]}
         alt={alt}
