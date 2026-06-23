@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Umaid avatar placeholder">
+  <rect width="512" height="512" rx="40" fill="#0B100E"/>
+  <!-- hair -->
+  <path d="M150 210c-6-70 46-120 108-120s116 44 110 118c-2 26-10 44-10 44l-24-26c2-18-2-34-2-34l-22 24-10-30-20 28-16-30-18 28-18-26-20 28-18-24c-6 12-12 30-12 30z" fill="#1C1A17"/>
+  <path d="M196 96c40-18 92-12 122 18-34-14-78-16-122-18z" fill="#2A2622"/>
+  <!-- face -->
+  <path d="M168 250c0-58 40-104 88-104s88 46 88 104c0 64-44 116-88 116s-88-52-88-116z" fill="#C98A5E"/>
+  <!-- ears -->
+  <circle cx="168" cy="280" r="16" fill="#C98A5E"/>
+  <circle cx="344" cy="280" r="16" fill="#C98A5E"/>
+  <!-- sunglasses -->
+  <g stroke="#C9A24B" stroke-width="6">
+    <rect x="186" y="236" width="58" height="44" rx="12" fill="#1A1714"/>
+    <rect x="268" y="236" width="58" height="44" rx="12" fill="#1A1714"/>
+    <line x1="244" y1="252" x2="268" y2="252"/>
+    <line x1="186" y1="250" x2="168" y2="256"/>
+    <line x1="326" y1="250" x2="344" y2="256"/>
+  </g>
+  <circle cx="212" cy="258" r="6" fill="#fff" opacity="0.85"/>
+  <circle cx="294" cy="258" r="6" fill="#fff" opacity="0.85"/>
+  <!-- smile -->
+  <path d="M222 312c12 14 56 14 68 0-6 16-22 26-34 26s-28-10-34-26z" fill="#3A2A22"/>
+  <path d="M228 314c10 8 46 8 56 0-8 8-20 12-28 12s-20-4-28-12z" fill="#fff"/>
+  <!-- beard hint -->
+  <path d="M196 330c8 30 34 52 60 52s52-22 60-52c-6 26-30 50-60 50s-54-24-60-50z" fill="#1C1A17" opacity="0.5"/>
+  <text x="256" y="458" text-anchor="middle" font-family="monospace" font-size="20" letter-spacing="4" fill="#22C55E">UMAID</text>
+</svg>

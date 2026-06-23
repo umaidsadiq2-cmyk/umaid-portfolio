@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+/*
+  Design system — Muhammad Umaid Sadiq
+  Light premium-minimal. The personality lives in type, spatial rhythm, and one
+  signature: the emerald growth line. Palette is bespoke — brand color is a deep
+  emerald (#0B6E4F, ~6.3:1 on white, AA), NOT the generic green-500. #22C55E is
+  demoted to a micro "signal" accent only.
+*/
+
+@theme inline {
+  --font-display: var(--font-bricolage);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  /* Surfaces */
+  --color-canvas: #ffffff; /* primary background ~70% */
+  --color-mist: #fafafa; /* alternating sections ~20% */
+  --color-fog: #f4f5f2; /* faint green-tinted off-white */
+
+  /* Ink */
+  --color-ink: #0b100e; /* near-black, green-black undertone */
+  --color-ink-soft: #2c322f; /* strong secondary text */
+  --color-muted: #5b6660; /* green-grey, tertiary text/labels */
+
+  /* Brand */
+  --color-emerald: #0b6e4f; /* brand — text, buttons, ~10% accent */
+  --color-emerald-deep: #095a40; /* hover/pressed */
+  --color-emerald-tint: #e7f1ec; /* soft fills, chips */
+  --color-signal: #22c55e; /* micro accent / focus marks ONLY */
+
+  /* Lines */
+  --color-line: #e6e8e4; /* hairline borders on white */
+  --color-line-strong: #d4d8d2;
+
+  /* Radius — restrained, not pill-everything */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Motion vocabulary */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --dur-fast: 180ms;
+  --dur-base: 420ms;
+  --dur-slow: 760ms;
+
+  /* Content rhythm */
+  --shell-max: 1200px;
+  --shell-wide: 1360px;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Lenis smooth-scroll integration */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-emerald);
+    color: #ffffff;
+  }
+
+  /* Focus — visible, branded with the signal green */
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page shell — generous, asymmetric-friendly gutter */
+  .shell {
+    width: 100%;
+    max-width: var(--shell-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .shell-wide {
+    max-width: var(--shell-wide);
+  }
+
+  /* Eyebrow — mono label that encodes the metrics/data vernacular */
+  .eyebrow {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: var(--color-emerald);
+  }
+
+  /* Fluid display scale */
+  .display-xl {
+    font-family: var(--font-display), Georgia, serif;
+    font-size: clamp(2.75rem, 8vw, 6.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+  }
+  .display-lg {
+    font-family: var(--font-display), Georgia, serif;
+    font-size: clamp(2.25rem, 5.5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  /*
+    Reveal primitive. Hidden state applies ONLY when JS is active (html.js),
+    so without JS — or if IntersectionObserver never fires — content stays
+    visible. The .js class is set pre-paint by an inline script in layout.
+  */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity var(--dur-base) var(--ease-out-quart),
+      transform var(--dur-base) var(--ease-out-quart);
+    will-change: opacity, transform;
+  }
+  .js .reveal[data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Hero signature: ascending growth line draws on load */
+  .grow-line path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 1.6s var(--ease-out-expo) 0.2s forwards;
+  }
+  .grow-line circle {
+    opacity: 0;
+    animation: dot-in 0.5s ease-out 1.5s forwards;
+  }
+  @keyframes draw-line {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes dot-in {
+    to {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grow-line path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+    .grow-line circle {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* Subtle dotted measure for the brand panel */
+  .measure-grid {
+    background-image: radial-gradient(
+      var(--color-line-strong) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Avatar idle float — the character feels alive without being distracting */
+  .avatar-float {
+    animation: avatar-bob 6s ease-in-out infinite;
+  }
+  @keyframes avatar-bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-1deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(1deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .avatar-float {
+      animation: none;
+    }
+  }
+
+  /*
+    Sticky stacking cards. Each card sticks at an increasing top offset, so as
+    the next card slides over, only the previous card's heading strip stays
+    visible — building a layered stack of headings above the active card.
+    Pure CSS sticky: robust, performant, works without JS.
+  */
+  .stack {
+    --nav-h: 4.5rem;
+    --strip-h: 4.75rem;
+  }
+  .stack-card {
+    position: sticky;
+  }
+}
