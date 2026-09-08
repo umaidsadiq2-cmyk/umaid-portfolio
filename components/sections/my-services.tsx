@@ -246,7 +246,15 @@ export function MyServices() {
               ref={wrapRef}
               /* scroll-px matches the padding: without it, scroll-snap aligns
                cards to the padding EDGE and parks the track 12px to the left of
-               the container. */
+               the container. data-lenis-prevent: on mobile (where the pin
+               above is switched off) this becomes a native swipeable
+               scroller, but Lenis — mounted globally for the page's smooth
+               vertical scroll — intercepts touch-drag everywhere by default
+               and turns a horizontal swipe here into vertical page scroll
+               instead. This attribute tells Lenis to leave touch input on
+               this element alone so the native horizontal swipe actually
+               works. */
+              data-lenis-prevent
               className="-mx-3 snap-x snap-mandatory scroll-px-3 overflow-x-auto px-3 pb-12 pt-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div ref={trackRef} className="flex gap-6">

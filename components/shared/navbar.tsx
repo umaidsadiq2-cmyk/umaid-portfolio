@@ -68,7 +68,17 @@ export function Navbar() {
       )}
     >
       <div className="shell shell-wide relative flex h-16 items-center md:h-20">
-        <nav className="flex items-center gap-6 md:gap-8" aria-label="Primary">
+        {/*
+          w-full + justify-between on mobile: with only two links and the logo
+          absolutely centred over them, splitting the pair to the two edges
+          reads as a proper header (one mark each side of the logo) instead of
+          both links stacking to the left of it. From md up this reverts to a
+          normal left-aligned, gapped group — the original desktop layout.
+        */}
+        <nav
+          className="flex w-full items-center justify-between gap-6 md:w-auto md:justify-start md:gap-8"
+          aria-label="Primary"
+        >
           {headerNav.map((item) => (
             <Link
               key={item.href}
