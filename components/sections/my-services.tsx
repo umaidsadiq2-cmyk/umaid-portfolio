@@ -107,24 +107,41 @@ export function MyServices() {
 
     const mm = gsap.matchMedia();
 
-    // Below 640px of viewport height a full-height pinned stage cannot hold the
-    // heading and a 4:5 card at a sensible size, so the pin is skipped entirely
-    // and the carousel stays a plain native scroller. This now runs at every
-    // width (mobile included) — vertical scroll/swipe drives the horizontal
-    // travel everywhere; only reduced-motion opts out.
-    //
-    // The height check itself is done ONCE, here, with a plain boolean rather
-    // than as a live condition inside `mm.add`. gsap.matchMedia re-evaluates a
-    // live query on every viewport resize — and on a phone, the address bar
-    // collapsing mid-scroll fires exactly that kind of resize, which flipped
-    // this query, reverted the pin, and rebuilt it while the user's finger
-    // was still on the screen. That's what made the mobile carousel feel
-    // broken: the interaction was restarting under the user's thumb. Reduced
-    // motion is a real, static user preference and safe to leave live.
-    const tallEnough = window.innerHeight >= 640;
+    /*
+      Conditions are deliberately WIDTH- and preference-based only. There is no
+      viewport-height condition here, and that is the whole point:
 
-    if (tallEnough) {
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      - A height gate ("(min-height: 640px)", or a one-time
+        `window.innerHeight >= 640`) silently disabled this pin on most phones.
+        A phone reports an `innerHeight` of roughly 550–660px while the address
+        bar is showing, so the gate failed, no pin was ever installed, and a
+        mobile visitor scrolled straight past the carousel into the next
+        section — exactly the reported bug.
+      - Height conditions are also actively hostile on mobile even when they do
+        pass: the address bar collapsing mid-scroll changes viewport height,
+        which re-evaluates a live height query, reverts the pin and rebuilds it
+        under the user's thumb.
+
+      Width queries have neither problem — a phone's width does not change as
+      the browser chrome hides — so the mobile/desktop split is safe to keep
+      live, and it correctly rebuilds on an orientation change. Fitting the
+      pinned stage into a short viewport is handled in CSS instead (see the
+      svh-based cap on the carousel container below), which is the right layer
+      for it: the layout adapts rather than the interaction disappearing.
+    */
+    mm.add(
+      {
+        isMobile: "(max-width: 767px)",
+        canMove: "(prefers-reduced-motion: no-preference)",
+      },
+      (ctx) => {
+        const { isMobile, canMove } = ctx.conditions as {
+          isMobile: boolean;
+          canMove: boolean;
+        };
+        // Reduced motion keeps the plain, natively-swipeable scroller.
+        if (!canMove) return;
+
         const track = trackRef.current;
         const wrap = wrapRef.current;
         const section = sectionRef.current;
@@ -149,22 +166,28 @@ export function MyServices() {
          * The pinned scroll is a timeline, not a bare tween, so it can hold still
          * at both ends:
          *
-         *   0 → 18%   SETTLE. The section is pinned and completely stationary.
-         *             The heading and the first three cards are fully on screen
-         *             and stable, so the section arrives and reads as a finished
-         *             composition before anything slides.
-         *  18 → 93%   TRAVEL. Cards 4–6 are drawn in. This phase is given exactly
-         *             `distance` pixels of scroll, so the track moves 1:1 with the
-         *             wheel and never races ahead of it.
-         *  93 → 100%  REST. Held on the last three cards, so the carousel finishes
-         *             on a settled frame rather than snapping straight into the
-         *             next section.
+         *   SETTLE  The section is pinned and completely stationary. The heading
+         *           and the first cards are fully on screen and stable, so the
+         *           section arrives and reads as a finished composition before
+         *           anything slides.
+         *   TRAVEL  The remaining cards are drawn in. This phase is given exactly
+         *           `distance` pixels of scroll, so the track moves 1:1 with the
+         *           wheel and never races ahead of it.
+         *   REST    Held on the last cards, so the carousel finishes on a settled
+         *           frame rather than snapping straight into the next section.
          *
          * Total range is scaled by 1/TRAVEL so the travel phase keeps that 1:1
          * mapping regardless of how long the holds are.
+         *
+         * Mobile gets far shorter holds. On desktop an 18% opening hold is a
+         * beat; on a phone the same fraction is several hundred pixels of
+         * swiping with nothing visibly moving, which reads as the page being
+         * stuck rather than as a deliberate pause. Cards there start moving
+         * almost immediately, which is also what makes the locked section
+         * legible as "scroll moves the cards" instead of "scroll is broken".
          */
-        const SETTLE = 0.18;
-        const TRAVEL = 0.75;
+        const SETTLE = isMobile ? 0.04 : 0.18;
+        const TRAVEL = isMobile ? 0.92 : 0.75;
         const REST = 1 - SETTLE - TRAVEL;
 
         const tl = gsap.timeline({
@@ -174,7 +197,10 @@ export function MyServices() {
             start: "top top",
             end: () => `+=${Math.round(distance() / TRAVEL)}`,
             pin: true,
-            scrub: 1,
+            // A shorter scrub on touch: the 1s easing lag that reads as
+            // cinematic behind a mouse wheel feels disconnected from a finger
+            // that is still on the glass.
+            scrub: isMobile ? 0.5 : 1,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
@@ -190,8 +216,8 @@ export function MyServices() {
           wrap.style.overflowX = prevOverflow;
           gsap.set(track, { clearProps: "transform" });
         };
-      });
-    }
+      },
+    );
 
     /**
      * Pinning this section injects ~1000px of spacer height into the document.
@@ -223,10 +249,11 @@ export function MyServices() {
     >
       {/* pt clears the fixed navbar, which would otherwise sit over the eyebrow
           once this section is pinned to the top of the viewport. */}
-      {/* min-h (not a fixed height): above 640px tall the cap below guarantees
-          the content fits one screen exactly, and under that the pin is off and
-          the section is free to grow instead of clipping its own cards. */}
-      <div className="flex min-h-svh flex-col justify-center pb-16 pt-24 md:pb-4 md:pt-24">
+      {/* min-h (not a fixed height): the caps below keep the content inside one
+          screen at every size the pin runs at, so a pinned stage never hides
+          the bottom of its own card. Mobile padding is tighter than desktop
+          because every pixel of chrome here comes straight off the card. */}
+      <div className="flex min-h-svh flex-col justify-center pb-10 pt-20 md:pb-4 md:pt-24">
         {/* Everything lives inside the page container, so the cards are inset by
             the same gutter as every other section and never reach the viewport
             edge. */}
@@ -243,39 +270,45 @@ export function MyServices() {
             before it is clipped, while staying inside the page gutter (so it can
             never cause horizontal page scroll). Vertical padding does the same
             for the hover lift. */}
-        <div className="mx-auto mt-10 w-full max-w-[1600px] px-[var(--gutter)] md:mt-6">
+        <div className="mx-auto mt-6 w-full max-w-[1600px] px-[var(--gutter)] md:mt-6">
           {/*
-            Short-viewport handling. A card is always exactly one third of this
-            box, so the box is what has to shrink when a third would be taller
-            than the pinned screen — capping the CARD instead would leave slack
-            in the row and let a fourth card slide into view.
+            Short-viewport handling. A card is always exactly one whole / half /
+            third of this box, so the box is what has to shrink when a card
+            would be taller than the pinned screen — capping the CARD instead
+            would leave slack in the row and let an extra card slide into view.
 
-            The cap is the widest container whose third, at 4:5, still fits the
-            height left over once the navbar, heading and padding are subtracted
-            (~325px of chrome, plus slack): width = 2.4 × leftover, i.e.
-            240svh − 780px. Above roughly 900px tall it exceeds the container and
-            does nothing.
+            Each cap is the widest container whose card, at 4:5, still fits the
+            height left over once the navbar, heading and padding are
+            subtracted, i.e. width = (leftover height) × 4/5 × (cards per row).
 
-            It is deliberately scoped to min-height 640px — the same cutoff the
-            pin uses. Below that the section is NOT pinned and is free to grow
-            past one screen, so squeezing the cards to fit a screen they no
-            longer have to fit just made them needlessly small.
+              mobile  1 card:  (100svh − 360px) × 0.8
+              md      2 cards: 160svh − 378px
+              lg      3 cards: 240svh − 567px
+
+            Each is a max-width only, so on a tall screen it exceeds the
+            container and does nothing — the card simply grows to the normal
+            full width. On a short one it shrinks the card just enough to keep
+            the whole pinned composition on a single screen, which is what
+            makes a locked section legible rather than clipped.
           */}
-          <div className="mx-auto w-full md:max-w-[calc(160svh-378px)] lg:max-w-[calc(240svh-567px)]">
+          <div className="mx-auto w-full max-w-[calc((100svh-360px)*0.8)] md:max-w-[calc(160svh-378px)] lg:max-w-[calc(240svh-567px)]">
             <div
               ref={wrapRef}
               /* scroll-px matches the padding: without it, scroll-snap aligns
                cards to the padding EDGE and parks the track 12px to the left of
-               the container. data-lenis-prevent: on mobile (where the pin
-               above is switched off) this becomes a native swipeable
-               scroller, but Lenis — mounted globally for the page's smooth
-               vertical scroll — intercepts touch-drag everywhere by default
-               and turns a horizontal swipe here into vertical page scroll
-               instead. This attribute tells Lenis to leave touch input on
-               this element alone so the native horizontal swipe actually
-               works. */
-              data-lenis-prevent
-              className="-mx-3 snap-x snap-mandatory scroll-px-3 overflow-x-auto px-3 pb-12 pt-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+               the container.
+
+               Deliberately NO `data-lenis-prevent` here. It was added when
+               mobile fell back to a native horizontal swipe, to stop Lenis
+               swallowing that gesture — but mobile is now pinned like desktop,
+               where the gesture that matters is a plain vertical scroll that
+               ScrollTrigger reads off the page. On a phone this wrapper covers
+               most of the pinned viewport, so telling Lenis to ignore input
+               over it would suppress the very scroll the carousel runs on. The
+               remaining fallback is reduced motion, and SmoothScroll already
+               bails out entirely in that case, so Lenis is not running there
+               to interfere. */
+              className="-mx-3 snap-x snap-mandatory scroll-px-3 overflow-x-auto px-3 pb-8 pt-4 md:pb-12 md:pt-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div ref={trackRef} className="flex gap-6">
                 {CARDS.map((card, i) => (
