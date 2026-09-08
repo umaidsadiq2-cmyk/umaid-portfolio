@@ -178,86 +178,139 @@
   }
 
   /*
-    Reveal primitive. Hidden state applies ONLY when JS is active (html.js),
-    so without JS — or if IntersectionObserver never fires — content stays
-    visible. The .js class is set pre-paint by an inline script in layout.
+    Scroll-motion initial states. GSAP + ScrollTrigger drives the actual reveals
+    (see MotionProvider); these hidden states exist only to prevent a flash before
+    the timeline runs. They apply ONLY when JS is active (html.js) AND the user
+    allows motion — so no-JS and reduced-motion users always get the final,
+    fully-visible content (SEO + a11y safe). GSAP animates each element to its
+    resting state as it scrolls into view.
   */
-  .js .reveal {
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-anim="split"],
+    .js [data-anim="reveal"],
+    .js [data-anim="card"] {
+      opacity: 0;
+    }
+    .js [data-anim="reveal"] {
+      clip-path: inset(0 0 100% 0);
+    }
+    /* Directional image slide — the image starts fully off to one side and
+       slides into place. Its parent must clip (.img-clip) so there's no overflow. */
+    .js [data-anim="img-left"] {
+      transform: translateX(-100%);
+    }
+    .js [data-anim="img-right"] {
+      transform: translateX(100%);
+    }
+  }
+  .img-clip {
+    overflow: hidden;
+  }
+
+  /* Split-text reveal — each character rides up from behind a mask (never a
+     fade). Characters are grouped per word (.split-word, nowrap) so a heading
+     only ever wraps at real spaces, never mid-word. */
+  .split-word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+  }
+  .word-inner {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  /* Animated link underline — wipes in from the left on hover. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.45s var(--ease-out-expo);
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  /* Custom cursor — fine-pointer + motion only (JS adds html.has-cursor). */
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    pointer-events: none;
+    border-radius: 9999px;
     opacity: 0;
-    transform: translateY(18px);
+  }
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-emerald);
+    transition: opacity 0.3s ease;
+  }
+  .cursor-ring {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--color-emerald);
     transition:
-      opacity var(--dur-base) var(--ease-out-quart),
-      transform var(--dur-base) var(--ease-out-quart);
-    will-change: opacity, transform;
+      width 0.28s var(--ease-out-expo),
+      height 0.28s var(--ease-out-expo),
+      background-color 0.28s ease,
+      opacity 0.3s ease;
   }
-  .js .reveal[data-reveal="in"] {
-    opacity: 1;
-    transform: none;
+  .cursor-ring.is-active {
+    width: 64px;
+    height: 64px;
+    background: color-mix(in srgb, var(--color-emerald) 12%, transparent);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .js .reveal {
-      opacity: 1;
-      transform: none;
+  @media (pointer: fine) {
+    html.has-cursor,
+    html.has-cursor a,
+    html.has-cursor button,
+    html.has-cursor [data-magnetic] {
+      cursor: none;
+    }
+    html.has-cursor input,
+    html.has-cursor textarea,
+    html.has-cursor select {
+      cursor: auto;
     }
   }
 
-  /* Hero signature: ascending growth line draws on load */
-  .grow-line path {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: draw-line 1.6s var(--ease-out-expo) 0.2s forwards;
+  /*
+    Hero spotlight handoff. While the hero scene is on screen (JS adds
+    html.hero-light) the emerald dot + ring stand down, so the warm spotlight is
+    the only cursor treatment there and two rings never overlap.
+    `!important` is needed because the Cursor component sets opacity inline.
+
+    The native arrow is hidden too: the spotlight carries its own glowing dot at
+    the centre of the ring, which marks the pointer position instead. That dot
+    stays lit even when the mouse is still, so the cursor is never lost.
+  */
+  .hero-light .cursor-dot,
+  .hero-light .cursor-ring {
+    opacity: 0 !important;
   }
-  .grow-line circle {
-    opacity: 0;
-    animation: dot-in 0.5s ease-out 1.5s forwards;
-  }
-  @keyframes draw-line {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  @keyframes dot-in {
-    to {
-      opacity: 1;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .grow-line path {
-      animation: none;
-      stroke-dashoffset: 0;
-    }
-    .grow-line circle {
-      animation: none;
-      opacity: 1;
+  @media (pointer: fine) {
+    html.hero-light,
+    html.hero-light a,
+    html.hero-light button,
+    html.hero-light [data-magnetic] {
+      cursor: none;
     }
   }
 
   /* Subtle dotted measure for the brand panel */
   .measure-grid {
-    background-image: radial-gradient(
-      var(--color-line-strong) 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(var(--color-line-strong) 1px, transparent 1px);
     background-size: 22px 22px;
-  }
-
-  /* Avatar idle float — the character feels alive without being distracting */
-  .avatar-float {
-    animation: avatar-bob 6s ease-in-out infinite;
-  }
-  @keyframes avatar-bob {
-    0%,
-    100% {
-      transform: translateY(0) rotate(-1deg);
-    }
-    50% {
-      transform: translateY(-14px) rotate(1deg);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .avatar-float {
-      animation: none;
-    }
   }
 
   /*
@@ -267,10 +320,534 @@
     Pure CSS sticky: robust, performant, works without JS.
   */
   .stack {
-    --nav-h: 4.5rem;
-    --strip-h: 4.75rem;
+    --nav-h: 4rem; /* matches mobile navbar height (h-16) */
+    --strip-h: 2.5rem; /* compact strips on mobile so all 7 cards stack without clipping */
+  }
+  @media (min-width: 768px) {
+    .stack {
+      --nav-h: 5rem; /* matches desktop navbar height (h-20) */
+      --strip-h: 3rem;
+    }
   }
   .stack-card {
     position: sticky;
+  }
+
+  /* ============================================================
+     Ambient background — a living atmosphere rebuilt in code to match the design
+     reference: soft white field, flowing desaturated sage-green clouds, bright
+     cream light blooms, faint curved hairlines, grain. Heavily-blurred radial
+     layers float/drift/breathe on their own cycles AND follow the pointer with
+     eased multi-depth parallax (`--mx`/`--my` from AmbientPointer applied via the
+     independent `translate` property, so mouse + breathing compose). Only
+     transform/opacity/translate animate → GPU-composited, no layout, no CLS.
+     ============================================================ */
+  .ambient {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    --mf: 0.45; /* pointer-parallax strength (overridden per variant) */
+  }
+  .ambient-hero {
+    --mf: 1;
+  }
+  .ambient-cta {
+    --mf: 0.72;
+  }
+  .ambient-portfolio {
+    --mf: 0.4;
+  }
+  .ambient-about {
+    --mf: 0.4;
+  }
+  .ambient-header {
+    --mf: 0.38;
+  }
+  .ambient-services {
+    --mf: 0.22;
+  }
+
+  /* Vanta FOG mount (hero) — fills the section behind content, never intercepts
+     pointer events (Vanta binds mousemove to window). */
+  .vanta-fog {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Bright cream light bloom — the soft hotspot in the reference. */
+  .ambient-bloom {
+    position: absolute;
+    inset: 0;
+    margin: auto; /* centres an oversized absolute box without a transform */
+    width: 120vw;
+    height: 120vw;
+    max-width: 1500px;
+    max-height: 1500px;
+    --ob: 0; /* peak opacity per variant */
+    --depth: 9; /* deepest → least pointer travel */
+    opacity: var(--ob);
+    border-radius: 50%;
+    filter: blur(90px);
+    background: radial-gradient(
+      circle at 38% 34%,
+      rgba(255, 255, 249, 0.95) 0%,
+      rgba(252, 253, 246, 0.5) 32%,
+      rgba(255, 255, 255, 0) 66%
+    );
+  }
+
+  /* Flowing clouds — large, soft, off-centre cores so rotation shifts the light. */
+  .ambient-cloud {
+    position: absolute;
+    width: 72vw;
+    height: 72vw;
+    max-width: 980px;
+    max-height: 980px;
+    --o: 0; /* peak opacity per variant; breathes below it */
+    --depth: 20;
+    opacity: var(--o);
+    border-radius: 50%;
+    filter: blur(74px);
+  }
+  .ambient-cloud-1 {
+    /* sage green — lower-left, foreground (follows pointer most) */
+    left: -16%;
+    bottom: -22%;
+    --depth: 44;
+    background: radial-gradient(
+      circle at 44% 42%,
+      #d8dcdd 0%,
+      #e8ebeb 40%,
+      rgba(232, 235, 235, 0) 70%
+    );
+  }
+  .ambient-cloud-2 {
+    /* sage green — right, mid */
+    right: -20%;
+    top: 6%;
+    --depth: 30;
+    background: radial-gradient(
+      circle at 52% 48%,
+      #dadedf 0%,
+      #eaeded 42%,
+      rgba(234, 237, 237, 0) 70%
+    );
+  }
+  .ambient-cloud-3 {
+    /* deeper sage — bottom-centre */
+    left: 28%;
+    bottom: -34%;
+    --depth: 24;
+    background: radial-gradient(
+      circle at 50% 46%,
+      #d2d7d8 0%,
+      #e4e8e8 44%,
+      rgba(228, 232, 232, 0) 72%
+    );
+  }
+  .ambient-cloud-4 {
+    /* cool neutral grey — upper-right */
+    right: 4%;
+    top: -22%;
+    --depth: 16;
+    background: radial-gradient(
+      circle at 50% 54%,
+      #e3e7e3 0%,
+      #edefec 48%,
+      rgba(237, 239, 236, 0) 72%
+    );
+  }
+  .ambient-cloud-5 {
+    /* warm off-white — mid-left */
+    left: -8%;
+    top: 18%;
+    --depth: 12;
+    background: radial-gradient(
+      circle at 54% 46%,
+      #f3f2ec 0%,
+      #efefe8 48%,
+      rgba(239, 239, 232, 0) 72%
+    );
+  }
+
+  /* Faint curved hairlines — slightly off-white so they read on the canvas. */
+  .ambient-lines {
+    position: absolute;
+    inset: -6%;
+    width: 112%;
+    height: 112%;
+    --ol: 0;
+    --depth: 36;
+    opacity: var(--ol);
+  }
+  .ambient-line {
+    fill: none;
+    stroke: rgba(164, 178, 162, 0.55);
+    stroke-width: 1.4;
+    vector-effect: non-scaling-stroke;
+  }
+  .ambient-line-2 {
+    stroke: rgba(180, 186, 188, 0.5);
+  }
+  .ambient-line-3 {
+    stroke: rgba(172, 184, 168, 0.45);
+  }
+
+  /* ---- Per-section intensity tiers ---- */
+  /* Hero ★★★★★ */
+  .ambient-hero .ambient-bloom {
+    --ob: 0.58;
+  }
+  .ambient-hero .ambient-cloud-1 {
+    --o: 0.58;
+  }
+  .ambient-hero .ambient-cloud-2 {
+    --o: 0.46;
+  }
+  .ambient-hero .ambient-cloud-3 {
+    --o: 0.42;
+  }
+  .ambient-hero .ambient-cloud-4 {
+    --o: 0.36;
+  }
+  .ambient-hero .ambient-cloud-5 {
+    --o: 0.34;
+  }
+  .ambient-hero .ambient-lines {
+    --ol: 0.55;
+  }
+
+  /* About ★★ */
+  .ambient-about .ambient-bloom {
+    --ob: 0.28;
+  }
+  .ambient-about .ambient-cloud-1 {
+    --o: 0.32;
+  }
+  .ambient-about .ambient-cloud-4 {
+    --o: 0.24;
+  }
+  .ambient-about .ambient-cloud-2,
+  .ambient-about .ambient-cloud-3,
+  .ambient-about .ambient-cloud-5,
+  .ambient-about .ambient-lines {
+    display: none;
+  }
+
+  /* Services ★ */
+  .ambient-services .ambient-bloom {
+    --ob: 0.16;
+  }
+  .ambient-services .ambient-cloud-1 {
+    --o: 0.22;
+  }
+  .ambient-services .ambient-cloud-2,
+  .ambient-services .ambient-cloud-3,
+  .ambient-services .ambient-cloud-4,
+  .ambient-services .ambient-cloud-5,
+  .ambient-services .ambient-lines {
+    display: none;
+  }
+
+  /* Portfolio ★★★★ */
+  .ambient-portfolio .ambient-bloom {
+    --ob: 0.4;
+  }
+  .ambient-portfolio .ambient-cloud-1 {
+    --o: 0.44;
+  }
+  .ambient-portfolio .ambient-cloud-2 {
+    --o: 0.34;
+  }
+  .ambient-portfolio .ambient-cloud-4 {
+    --o: 0.28;
+  }
+  .ambient-portfolio .ambient-cloud-3,
+  .ambient-portfolio .ambient-cloud-5,
+  .ambient-portfolio .ambient-lines {
+    display: none;
+  }
+
+  /* CTA ★★★★ — lifted for a luxurious feel before the footer. */
+  .ambient-cta .ambient-bloom {
+    --ob: 0.48;
+  }
+  .ambient-cta .ambient-cloud-1 {
+    --o: 0.5;
+  }
+  .ambient-cta .ambient-cloud-2 {
+    --o: 0.4;
+  }
+  .ambient-cta .ambient-cloud-3 {
+    --o: 0.34;
+  }
+  .ambient-cta .ambient-lines {
+    --ol: 0.34;
+  }
+  .ambient-cta .ambient-cloud-4,
+  .ambient-cta .ambient-cloud-5 {
+    display: none;
+  }
+
+  /* Inner-page header ★★ */
+  .ambient-header .ambient-bloom {
+    --ob: 0.26;
+  }
+  .ambient-header .ambient-cloud-1 {
+    --o: 0.3;
+  }
+  .ambient-header .ambient-cloud-4 {
+    --o: 0.22;
+  }
+  .ambient-header .ambient-cloud-2,
+  .ambient-header .ambient-cloud-3,
+  .ambient-header .ambient-cloud-5,
+  .ambient-header .ambient-lines {
+    display: none;
+  }
+
+  /* ---- Motion ---- breathing + drift loops, plus eased pointer parallax. */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Pointer parallax — independent `translate` composes with the breathing
+       `transform`. Defaults to 0 (no JS / before mount / touch) → no shift. */
+    .ambient-bloom,
+    .ambient-cloud,
+    .ambient-lines {
+      translate: calc(var(--mx, 0) * var(--depth, 0) * var(--mf, 0.45) * 1px)
+        calc(var(--my, 0) * var(--depth, 0) * var(--mf, 0.45) * 1px);
+    }
+    .ambient-bloom {
+      will-change: transform, translate, opacity;
+      animation: amb-bloom 11s ease-in-out infinite;
+    }
+    .ambient-cloud-1 {
+      will-change: transform, translate, opacity;
+      animation: amb-a 15s ease-in-out infinite;
+    }
+    .ambient-cloud-2 {
+      will-change: transform, translate, opacity;
+      animation: amb-b 19s ease-in-out infinite;
+      animation-delay: -5s;
+    }
+    .ambient-cloud-3 {
+      will-change: transform, translate, opacity;
+      animation: amb-c 13s ease-in-out infinite;
+      animation-delay: -8s;
+    }
+    .ambient-cloud-4 {
+      will-change: transform, translate, opacity;
+      animation: amb-d 17s ease-in-out infinite;
+      animation-delay: -11s;
+    }
+    .ambient-cloud-5 {
+      will-change: transform, translate, opacity;
+      animation: amb-e 21s ease-in-out infinite;
+      animation-delay: -3s;
+    }
+    .ambient-lines {
+      will-change: transform, translate;
+      animation: amb-lines 23s ease-in-out infinite;
+    }
+
+    /* Calmer where content leads. */
+    .ambient-services .ambient-cloud,
+    .ambient-services .ambient-bloom,
+    .ambient-portfolio .ambient-cloud,
+    .ambient-portfolio .ambient-bloom {
+      animation-duration: 28s;
+    }
+  }
+
+  @keyframes amb-bloom {
+    0%,
+    100% {
+      transform: scale(1) translate3d(0, 0, 0);
+      opacity: calc(var(--ob) * 0.82);
+    }
+    50% {
+      transform: scale(1.1) translate3d(1.5%, -1.5%, 0);
+      opacity: var(--ob);
+    }
+  }
+  @keyframes amb-a {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.74);
+    }
+    40% {
+      transform: translate3d(7%, 4%, 0) scale(1.1) rotate(3deg);
+      opacity: var(--o);
+    }
+    70% {
+      transform: translate3d(11%, -3%, 0) scale(1.15) rotate(5deg);
+      opacity: calc(var(--o) * 0.86);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.74);
+    }
+  }
+  @keyframes amb-b {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1.06) rotate(0deg);
+      opacity: calc(var(--o) * 0.78);
+    }
+    45% {
+      transform: translate3d(-8%, -5%, 0) scale(1) rotate(-4deg);
+      opacity: var(--o);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1.06) rotate(0deg);
+      opacity: calc(var(--o) * 0.78);
+    }
+  }
+  @keyframes amb-c {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.72);
+    }
+    50% {
+      transform: translate3d(-9%, -7%, 0) scale(1.14) rotate(3deg);
+      opacity: var(--o);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.72);
+    }
+  }
+  @keyframes amb-d {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1.04) rotate(0deg);
+      opacity: calc(var(--o) * 0.76);
+    }
+    35% {
+      transform: translate3d(6%, 4%, 0) scale(1.12) rotate(-2deg);
+      opacity: var(--o);
+    }
+    68% {
+      transform: translate3d(-4%, 6%, 0) scale(1) rotate(2deg);
+      opacity: calc(var(--o) * 0.82);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1.04) rotate(0deg);
+      opacity: calc(var(--o) * 0.76);
+    }
+  }
+  @keyframes amb-e {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.74);
+    }
+    50% {
+      transform: translate3d(7%, -5%, 0) scale(1.13) rotate(-3deg);
+      opacity: var(--o);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      opacity: calc(var(--o) * 0.74);
+    }
+  }
+  @keyframes amb-lines {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(2%, -1.5%, 0) scale(1.03);
+    }
+  }
+
+  /*
+    Grain — an ultra-light film texture over the whole page so the large flat
+    white areas never feel dead. A single fixed, inline-SVG fractal-noise tile
+    (no network request), pointer-events: none, beneath the navbar/overlays.
+  */
+  .grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 150px 150px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .grain {
+      will-change: transform;
+      animation: grain-shift 6s steps(6) infinite;
+    }
+  }
+  @keyframes grain-shift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    20% {
+      transform: translate3d(-1.2%, 0.8%, 0);
+    }
+    40% {
+      transform: translate3d(0.8%, -1%, 0);
+    }
+    60% {
+      transform: translate3d(-0.6%, -0.8%, 0);
+    }
+    80% {
+      transform: translate3d(1%, 0.6%, 0);
+    }
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /*
+    Mobile — lighter: drop the densest clouds and the hairlines, smaller blur
+    (cheaper to raster), softer grain. Keeps 60fps + battery-friendly.
+  */
+  @media (max-width: 767px) {
+    .ambient-cloud {
+      width: 86vw;
+      height: 86vw;
+      filter: blur(52px);
+    }
+    .ambient-bloom {
+      filter: blur(64px);
+    }
+    .ambient-cloud-4,
+    .ambient-cloud-5,
+    .ambient-lines {
+      display: none;
+    }
+    .ambient-portfolio .ambient-cloud-4 {
+      display: none;
+    }
+    .ambient-services .ambient-cloud-1 {
+      --o: 0.18;
+    }
+    .grain {
+      opacity: 0.05;
+    }
+  }
+}
+
+/* Lightbox entrance — fade the blurred backdrop, scale-in the poster. */
+@keyframes lb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lb-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

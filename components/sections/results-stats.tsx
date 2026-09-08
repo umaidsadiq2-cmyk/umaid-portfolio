@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/shared/reveal";
+import { Ambient } from "@/components/motion/ambient";
 
 type Stat = { value: number; suffix: string; label: string };
 
@@ -76,12 +77,13 @@ export function ResultsStats() {
   }, []);
 
   return (
-    <section className="border-y border-line bg-canvas">
+    <section className="relative isolate border-y border-line bg-canvas">
+      <Ambient variant="services" />
       <div className="shell shell-wide py-20 md:py-28" ref={ref}>
         <Reveal>
           <p className="eyebrow">By the numbers</p>
         </Reveal>
-        <Reveal delay={60}>
+        <Reveal delay={60} rise>
           <h2 className="display-lg mt-6 max-w-3xl">
             Experience that shows up in the results.
           </h2>

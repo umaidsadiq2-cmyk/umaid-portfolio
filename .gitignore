@@ -34,3 +34,14 @@ yarn-error.log*
 /coverage
 /test-results
 /playwright-report
+
+.vercel
+
+# local-only scratch: raw asset uploads (optimized copies already live under
+# /public), one-off debug/probe scripts, and historical review screenshots —
+# none of these are needed to build or run the site.
+/screenshots
+/scripts
+/Homepage Video
+/Images
+/.omc

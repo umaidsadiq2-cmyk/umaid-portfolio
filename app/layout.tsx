@@ -10,10 +10,8 @@ import {
   websiteJsonLd,
   professionalServiceJsonLd,
 } from "@/lib/seo";
-import { Navbar } from "@/components/shared/navbar";
-import { Footer } from "@/components/shared/footer";
-import { ScrollProgress } from "@/components/shared/scroll-progress";
-import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { SiteChrome } from "@/components/shared/site-chrome";
+import { WhatsAppFloat } from "@/components/shared/whatsapp-float";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -37,25 +35,22 @@ export default function RootLayout({
       className={`${bricolage.variable} ${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
-        {/* Set .js pre-paint so reveal animations are JS-gated (no-JS = visible). */}
+        {/* Pre-paint flag: `js` gates the scroll-reveal animations, so a no-JS
+            visitor always gets the fully-visible content. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: "document.documentElement.classList.add('js')",
+            __html:
+              "(function(){document.documentElement.classList.add('js')})()",
           }}
         />
       </head>
-      <body className="antialiased">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-sm focus:bg-emerald focus:px-4 focus:py-2 focus:text-sm focus:text-white"
-        >
-          Skip to content
-        </a>
-        <SmoothScroll />
-        <ScrollProgress />
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
+      {/* suppressHydrationWarning: some antivirus/ad-blocking browser
+          extensions (e.g. Bitdefender) inject a `bis_skin_checked` attribute
+          into the live DOM before React hydrates, which otherwise trips a
+          false-positive hydration mismatch warning that has nothing to do
+          with actual app state. */}
+      <body className="antialiased" suppressHydrationWarning>
+        <SiteChrome floatingCta={<WhatsAppFloat />}>{children}</SiteChrome>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}

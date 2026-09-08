@@ -1,31 +1,59 @@
 import type { Metadata } from "next";
-import { portfolio } from "@/content/portfolio";
-import { WorkCard } from "@/components/shared/work-card";
+import { portfolioCategories } from "@/content/portfolio-categories";
+import { CategoryCard } from "@/components/portfolio/category-card";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/sections/page-header";
 import { FinalCta } from "@/components/sections/final-cta";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+
+const PATH = "/portfolio";
 
 export const metadata: Metadata = buildMetadata({
   title: "Work",
   description:
-    "Selected work by Muhammad Umaid Sadiq — brand, web, social, and video projects framed by the outcomes they produced.",
-  path: "/portfolio",
+    "Selected work by Muhammad Umaid Sadiq — social media creatives and video content, organised by client.",
+  path: PATH,
 });
 
+const crumbs = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: PATH },
+];
+
+/**
+ * The hub of the work flow.
+ *
+ * Navbar "Work" lands here and shows exactly two choices; each opens that
+ * section's brand cards, which the CMS drives. Previously this page listed
+ * individual placeholder projects, which duplicated the section pages and
+ * skipped the category step entirely.
+ */
 export default function PortfolioPage() {
-  const items = [...portfolio].sort((a, b) => a.order - b.order);
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd(crumbs)),
+        }}
+      />
       <PageHeader
         eyebrow="Selected work"
         title="Work that earns trust before the first call."
-        intro="Every project below is framed by the problem it solved and the result it produced — because that's what actually matters to your business."
+        intro="Two bodies of work — creative for social, and video built to hold attention. Pick one to see it client by client."
+        breadcrumb={
+          <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.path }))} />
+        }
       />
       <section className="bg-mist">
         <div className="shell shell-wide py-20 md:py-28">
-          <div className="grid gap-6 md:grid-cols-2">
-            {items.map((item, i) => (
-              <WorkCard key={item.slug} item={item} delay={(i % 2) * 80} />
+          <div className="grid gap-6 overflow-x-clip md:grid-cols-2">
+            {portfolioCategories.map((category, i) => (
+              <CategoryCard
+                key={category.href}
+                category={category}
+                priority={i === 0}
+              />
             ))}
           </div>
         </div>

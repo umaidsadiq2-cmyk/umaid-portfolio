@@ -6,14 +6,15 @@ type Variant = "primary" | "outline" | "ghost";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-medium rounded-sm " +
-  "transition-[background-color,color,border-color,transform] duration-200 " +
-  "ease-out focus-visible:outline-none active:translate-y-px " +
+  "group/btn relative inline-flex items-center justify-center gap-2 font-medium rounded-sm overflow-hidden " +
+  "transition-[background-color,color,border-color,transform,box-shadow] duration-300 " +
+  "ease-out focus-visible:outline-none hover:-translate-y-0.5 active:translate-y-0 " +
   "disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap";
 
 const variants: Record<Variant, string> = {
   // Brand emerald — AA contrast (white on #0B6E4F ≈ 6.3:1)
-  primary: "bg-emerald text-white hover:bg-emerald-deep",
+  primary:
+    "bg-emerald text-white hover:bg-emerald-deep hover:shadow-[0_14px_34px_-12px_rgba(11,110,79,0.6)]",
   outline: "border border-line-strong text-ink hover:border-ink hover:bg-fog",
   ghost: "text-ink hover:bg-fog",
 };
@@ -28,6 +29,8 @@ type StyleProps = {
   size?: Size;
   className?: string;
   children: ReactNode;
+  /** Trailing arrow with a slide-on-hover micro-interaction. Default: true. */
+  arrow?: boolean;
 };
 
 type ButtonProps = StyleProps &
@@ -41,8 +44,29 @@ type LinkProps = StyleProps &
   };
 
 export function Button(props: ButtonProps | LinkProps) {
-  const { variant = "primary", size = "md", className, children, ...rest } = props;
+  const {
+    variant = "primary",
+    size = "md",
+    className,
+    children,
+    arrow = true,
+    ...rest
+  } = props;
   const classes = cn(base, variants[variant], sizes[size], className);
+
+  const content = (
+    <>
+      <span className="relative z-10">{children}</span>
+      {arrow && (
+        <span
+          aria-hidden
+          className="relative z-10 -mr-1 inline-block translate-x-0 transition-transform duration-300 ease-out group-hover/btn:translate-x-1"
+        >
+          →
+        </span>
+      )}
+    </>
+  );
 
   if (rest.href !== undefined) {
     const { href, ...linkRest } = rest as LinkProps;
@@ -51,24 +75,29 @@ export function Button(props: ButtonProps | LinkProps) {
         <a
           href={href}
           className={classes}
+          data-magnetic
           target="_blank"
           rel="noopener noreferrer"
           {...(linkRest as ComponentPropsWithoutRef<"a">)}
         >
-          {children}
+          {content}
         </a>
       );
     }
     return (
-      <Link href={href} className={classes} {...linkRest}>
-        {children}
+      <Link href={href} className={classes} data-magnetic {...linkRest}>
+        {content}
       </Link>
     );
   }
 
   return (
-    <button className={classes} {...(rest as ComponentPropsWithoutRef<"button">)}>
-      {children}
+    <button
+      className={classes}
+      data-magnetic
+      {...(rest as ComponentPropsWithoutRef<"button">)}
+    >
+      {content}
     </button>
   );
 }

@@ -26,7 +26,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-ink-soft transition-colors hover:text-emerald"
+                    className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
                   >
                     {item.label}
                   </Link>
@@ -43,7 +43,7 @@ export function Footer() {
                   href={conversion.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-ink-soft transition-colors hover:text-emerald"
+                  className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
                 >
                   Book a consultation
                 </a>
@@ -56,7 +56,7 @@ export function Footer() {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-ink-soft transition-colors hover:text-emerald"
+                  className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
                 >
                   Message on WhatsApp
                 </a>
@@ -64,7 +64,7 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${conversion.email}`}
-                  className="text-sm text-ink-soft transition-colors hover:text-emerald"
+                  className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
                 >
                   {conversion.email}
                 </a>

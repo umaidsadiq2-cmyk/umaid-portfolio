@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
  * Premium smooth scrolling (Lenis). Mounts once at the root. Fully bypassed when
@@ -18,6 +19,9 @@ export function SmoothScroll() {
       smoothWheel: true,
       touchMultiplier: 1.6,
     });
+
+    // Keep ScrollTrigger in sync with Lenis' smoothed scroll position.
+    lenis.on("scroll", ScrollTrigger.update);
 
     let frame = 0;
     const raf = (time: number) => {

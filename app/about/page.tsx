@@ -20,11 +20,16 @@ export default function AboutPage() {
       {/* Story */}
       <section className="bg-canvas">
         <div className="shell shell-wide grid gap-12 py-20 md:grid-cols-[0.8fr_1.2fr] md:py-28">
-          <div className="measure-grid relative aspect-[4/5] overflow-hidden rounded-lg border border-line bg-fog">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-display text-[6rem] font-semibold leading-none text-ink/10">
-                US
-              </span>
+          <div className="img-clip rounded-lg">
+            <div
+              data-anim="img-left"
+              className="measure-grid relative aspect-[4/5] overflow-hidden rounded-lg border border-line bg-fog"
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-display text-[6rem] font-semibold leading-none text-ink/10">
+                  US
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-center">
@@ -51,7 +56,7 @@ export default function AboutPage() {
           <Reveal>
             <p className="eyebrow">How we work</p>
           </Reveal>
-          <Reveal delay={60}>
+          <Reveal delay={60} rise>
             <h2 className="display-lg mt-6 max-w-3xl">
               A clear path from first call to compounding growth.
             </h2>

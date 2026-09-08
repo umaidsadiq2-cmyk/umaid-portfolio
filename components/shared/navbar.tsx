@@ -1,125 +1,130 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { nav, conversion, siteMeta } from "@/content/site";
-import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { useLayoutEffect, useState } from "react";
+import { headerNav, siteMeta } from "@/content/site";
+import { BrandMark } from "@/components/shared/brand-mark";
 import { cn } from "@/lib/utils";
 
+/** Navbar height — the band that must clear a dark section. */
+const NAV_H = 80;
+
+/**
+ * Minimal header: the two on-page section links sit on the left, and the US
+ * mark is centred as the home link. Nothing else — no CTA, no mobile menu.
+ * With only two short labels the same row works at every width, so there is no
+ * hamburger to open. About and Contact live in the footer.
+ *
+ * The logo is absolutely centred rather than laid out in a middle column, so it
+ * stays on the exact horizontal centre of the page no matter how wide the link
+ * group on the left grows.
+ */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  // Defaults to true (white) rather than false: the home page always opens on
+  // the dark hero, so a false-first render would flash emerald links over the
+  // video for one frame before the layout effect below corrects it. Pages
+  // with no dark zone still resolve to false before paint, via useLayoutEffect.
+  const [overDark, setOverDark] = useState(true);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+  /**
+   * Any page may mark a full-bleed dark section with `data-nav-dark-zone` (the
+   * home page's video scene does). While that section sits under the navbar
+   * band, the navbar inverts to white and stays transparent — otherwise the
+   * default near-black links would be invisible over the footage.
+   *
+   * useLayoutEffect (not useEffect) so this resolves before the browser
+   * paints — otherwise a page without a dark zone would flash white first.
+   */
+  useLayoutEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      const zone = document.querySelector<HTMLElement>("[data-nav-dark-zone]");
+      if (!zone) {
+        setOverDark(false);
+        return;
+      }
+      const r = zone.getBoundingClientRect();
+      setOverDark(r.top <= 0 && r.bottom > NAV_H);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    window.addEventListener("resize", onScroll);
     return () => {
-      document.body.style.overflow = "";
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-  }, [open]);
+  }, [pathname]);
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-300",
-        scrolled
+        scrolled && !overDark
           ? "border-b border-line bg-canvas/80 backdrop-blur-md"
           : "border-b border-transparent bg-transparent",
       )}
     >
-      <div className="shell shell-wide flex h-16 items-center justify-between md:h-20">
+      <div className="shell shell-wide relative flex h-16 items-center md:h-20">
+        <nav className="flex items-center gap-6 md:gap-8" aria-label="Primary">
+          {headerNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "group relative text-sm transition-colors",
+                overDark
+                  ? "text-white/90 hover:text-white"
+                  : "text-ink-soft hover:text-ink",
+              )}
+            >
+              {item.label}
+              <span
+                className={cn(
+                  "absolute -bottom-1 left-0 h-px w-0 transition-[width] duration-300 ease-out group-hover:w-full",
+                  overDark ? "bg-white" : "bg-emerald",
+                )}
+              />
+            </Link>
+          ))}
+        </nav>
+
+        {/*
+          Two marks, cross-faded. The hero's mark is a white knockout made for
+          the dark video and would vanish on the light sections below, so the
+          emerald roundel takes over the moment the navbar leaves the dark zone.
+          Both are rendered and swapped by opacity rather than conditionally
+          mounted, so neither has to load mid-scroll and the change reads as a
+          fade instead of a pop.
+        */}
         <Link
           href="/"
-          className="font-display text-lg font-semibold tracking-tight"
-          onClick={() => setOpen(false)}
+          aria-label={`${siteMeta.shortName} — home`}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
-          {siteMeta.shortName}
-          <span className="text-emerald">.</span>
+          <span className="relative block h-10 w-10">
+            <BrandMark
+              className={cn(
+                "absolute inset-0 h-10 w-10 transition-opacity duration-300",
+                overDark ? "opacity-0" : "opacity-100",
+              )}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/umaid-sadiq-hero-logo.webp"
+              alt=""
+              width={256}
+              height={256}
+              decoding="async"
+              className={cn(
+                "absolute inset-0 h-10 w-10 object-contain transition-opacity duration-300",
+                overDark ? "opacity-100" : "opacity-0",
+              )}
+            />
+          </span>
         </Link>
-
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group relative text-sm text-ink-soft transition-colors hover:text-ink"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-emerald transition-[width] duration-300 ease-out group-hover:w-full" />
-            </Link>
-          ))}
-          <Button href={conversion.bookingUrl} size="md">
-            {conversion.primaryCtaLabel}
-          </Button>
-        </nav>
-
-        <button
-          type="button"
-          className="relative z-50 flex h-10 w-10 items-center justify-center md:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">Menu</span>
-          <div className="flex flex-col gap-[5px]">
-            <span
-              className={cn(
-                "block h-px w-6 bg-ink transition-transform duration-300",
-                open && "translate-y-[6px] rotate-45",
-              )}
-            />
-            <span
-              className={cn(
-                "block h-px w-6 bg-ink transition-opacity duration-300",
-                open && "opacity-0",
-              )}
-            />
-            <span
-              className={cn(
-                "block h-px w-6 bg-ink transition-transform duration-300",
-                open && "-translate-y-[6px] -rotate-45",
-              )}
-            />
-          </div>
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      <div
-        className={cn(
-          "fixed inset-0 z-40 bg-canvas transition-[opacity,visibility] duration-300 md:hidden",
-          open ? "visible opacity-100" : "invisible opacity-0",
-        )}
-      >
-        <nav
-          className="shell flex h-full flex-col justify-center gap-2"
-          aria-label="Mobile"
-        >
-          {nav.map((item, i) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="border-b border-line py-4 font-display text-3xl font-semibold tracking-tight"
-              style={{ transitionDelay: `${i * 40}ms` }}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Button
-            href={conversion.bookingUrl}
-            size="lg"
-            className="mt-6 w-full"
-          >
-            {conversion.primaryCtaLabel}
-          </Button>
-        </nav>
       </div>
     </header>
   );

@@ -1,27 +1,32 @@
 import { Photo } from "@/components/shared/photo";
 import { Reveal } from "@/components/shared/reveal";
+import { Ambient } from "@/components/motion/ambient";
 
-/** Editorial personal statement with umaid2 as a large portrait. */
+/** Editorial personal statement with umaid3 as a large portrait. */
 export function PersonalStatement() {
   return (
-    <section className="bg-mist">
-      <div className="shell shell-wide grid items-center gap-12 py-24 md:grid-cols-[0.85fr_1.15fr] md:gap-16 md:py-32">
-        <Reveal>
-          <Photo
-            src="/images/umaid2"
-            alt="Muhammad Umaid Sadiq, digital marketing expert portrait"
-            label="umaid2"
-            width={900}
-            height={1100}
-            className="rounded-lg border border-line"
-          />
-        </Reveal>
+    <section className="relative isolate bg-mist">
+      <Ambient variant="about" />
+      <div className="shell shell-wide grid items-center gap-7 py-20 md:grid-cols-[0.85fr_1.15fr] md:gap-16 md:py-32">
+        <div data-parallax="0.16" className="img-clip">
+          <div data-anim="img-left" className="group">
+            <Photo
+              src="/images/New2-cut.png"
+              alt="Muhammad Umaid Sadiq, digital marketing expert portrait"
+              label="umaid3"
+              width={1000}
+              height={1300}
+              className="bg-transparent"
+              imgClassName="transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.07]"
+            />
+          </div>
+        </div>
 
         <div>
           <Reveal>
             <p className="eyebrow">Why work with me</p>
           </Reveal>
-          <Reveal delay={80}>
+          <Reveal delay={80} rise>
             <p className="mt-6 font-display text-[clamp(1.75rem,3.4vw,3rem)] font-semibold leading-[1.08] tracking-tight">
               I build digital presence that earns{" "}
               <span className="text-emerald">trust</span> — and turns attention
