@@ -35,6 +35,25 @@ export default function RootLayout({
       className={`${bricolage.variable} ${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
+        {/* Google tag (gtag.js) — must load first, per Google's own setup
+            instructions. Only renders when NEXT_PUBLIC_GA_ID is configured,
+            so local/preview builds without an ID stay silent. */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`,
+              }}
+            />
+          </>
+        )}
         {/* Pre-paint flag: `js` gates the scroll-reveal animations, so a no-JS
             visitor always gets the fully-visible content. */}
         <script
