@@ -9,6 +9,20 @@ type PageSeo = {
   path?: string;
 };
 
+/**
+ * Default social share image. Every OG/Twitter card falls back to this when a
+ * page doesn't set its own — without it, links shared to WhatsApp, Facebook,
+ * or LinkedIn render as a bare text card with no thumbnail, which measurably
+ * hurts click-through from social shares (a large share of how a freelancer's
+ * work actually gets referred).
+ */
+const DEFAULT_OG_IMAGE = {
+  url: new URL("/images/umaid2.webp", siteMeta.url).toString(),
+  width: 582,
+  height: 1396,
+  alt: `${siteMeta.name} — ${siteMeta.role}`,
+};
+
 /** Per-route metadata builder (titles, canonical, OG, Twitter). */
 export function buildMetadata({ title, description, path = "/" }: PageSeo): Metadata {
   const url = new URL(path, siteMeta.url).toString();
@@ -26,11 +40,13 @@ export function buildMetadata({ title, description, path = "/" }: PageSeo): Meta
       siteName: siteMeta.name,
       type: "website",
       locale: "en_US",
+      images: [DEFAULT_OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description: desc,
+      images: [DEFAULT_OG_IMAGE.url],
     },
   };
 }
@@ -85,7 +101,14 @@ export function professionalServiceJsonLd() {
     description: siteMeta.description,
     url: siteMeta.url,
     image: new URL("/images/New1-cut.png", siteMeta.url).toString(),
-    areaServed: ["Pakistan", "United Arab Emirates", "United Kingdom", "Canada", "United States"],
+    areaServed: [
+      "Pakistan",
+      "United Arab Emirates",
+      "Saudi Arabia",
+      "United Kingdom",
+      "United States",
+      "Canada",
+    ],
     knowsAbout: offered,
     makesOffer: offered.map((name) => ({
       "@type": "Offer",

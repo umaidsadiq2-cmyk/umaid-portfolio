@@ -37,19 +37,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const serviceRoutes = servicePages.map((s) => `/services/${s.slug}`);
 
+  // Every entry gets the same build-time stamp. That's honest, not lazy: this
+  // is a static export with no per-page "updated at" tracked anywhere, so a
+  // per-route date would just be fabricated. A shared, real timestamp still
+  // tells crawlers the sitemap itself is current, which is what lastModified
+  // is actually for absent real per-page edit history.
+  const lastModified = new Date();
+
   return [
     ...staticRoutes.map((path) => ({
       url: new URL(path, siteMeta.url).toString(),
+      lastModified,
       changeFrequency: "monthly" as const,
       priority: path === "" ? 1 : 0.7,
     })),
     ...serviceRoutes.map((path) => ({
       url: new URL(path, siteMeta.url).toString(),
+      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
     ...brandRoutes.map((path) => ({
       url: new URL(path, siteMeta.url).toString(),
+      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
