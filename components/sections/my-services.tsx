@@ -75,8 +75,9 @@ const CARDS: ServiceCard[] = [
  *
  * The pin runs on every viewport width, including mobile — vertical wheel or
  * touch scroll drives the horizontal travel there too, no horizontal drag
- * required. It is gated only on viewport height and allowed motion via
- * `gsap.matchMedia`: below 640px tall, or with reduced motion on, the exact
+ * required. It is gated on viewport height (checked once at mount, not as a
+ * live query — see the effect below for why) and allowed motion (live, via
+ * `gsap.matchMedia`): below 640px tall, or with reduced motion on, the exact
  * same track falls back to a native horizontally-swipeable scroller with
  * scroll-snap — so the content and the interaction survive without the pin.
  * The wrapper only becomes `overflow: hidden` while the pinned version is
@@ -99,6 +100,10 @@ export function MyServices() {
   // ScrollTrigger and un-wraps the spacer) always finishes first.
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    // Mobile browsers resize the *viewport* (not the screen) as the address
+    // bar collapses/expands while scrolling. ScrollTrigger's own refresh
+    // logic already knows to ignore that noise — this just switches it on.
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     const mm = gsap.matchMedia();
 
@@ -106,10 +111,20 @@ export function MyServices() {
     // heading and a 4:5 card at a sensible size, so the pin is skipped entirely
     // and the carousel stays a plain native scroller. This now runs at every
     // width (mobile included) — vertical scroll/swipe drives the horizontal
-    // travel everywhere; only the height and reduced-motion checks opt out.
-    mm.add(
-      "(min-height: 640px) and (prefers-reduced-motion: no-preference)",
-      () => {
+    // travel everywhere; only reduced-motion opts out.
+    //
+    // The height check itself is done ONCE, here, with a plain boolean rather
+    // than as a live condition inside `mm.add`. gsap.matchMedia re-evaluates a
+    // live query on every viewport resize — and on a phone, the address bar
+    // collapsing mid-scroll fires exactly that kind of resize, which flipped
+    // this query, reverted the pin, and rebuilt it while the user's finger
+    // was still on the screen. That's what made the mobile carousel feel
+    // broken: the interaction was restarting under the user's thumb. Reduced
+    // motion is a real, static user preference and safe to leave live.
+    const tallEnough = window.innerHeight >= 640;
+
+    if (tallEnough) {
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
         const track = trackRef.current;
         const wrap = wrapRef.current;
         const section = sectionRef.current;
@@ -175,8 +190,8 @@ export function MyServices() {
           wrap.style.overflowX = prevOverflow;
           gsap.set(track, { clearProps: "transform" });
         };
-      },
-    );
+      });
+    }
 
     /**
      * Pinning this section injects ~1000px of spacer height into the document.
