@@ -73,11 +73,14 @@ const CARDS: ServiceCard[] = [
  * adds a one-second easing lag so the track glides rather than tracking the
  * wheel 1:1 — that lag is what makes it read as cinematic instead of mechanical.
  *
- * The pinned scroll is gated to desktop + allowed motion via `gsap.matchMedia`.
- * On mobile, and for anyone who prefers reduced motion, the exact same track
- * stays a native horizontally-swipeable scroller with scroll-snap — so the
- * content and the interaction survive without the pin. The wrapper only becomes
- * `overflow: hidden` while the pinned version is actually active.
+ * The pin runs on every viewport width, including mobile — vertical wheel or
+ * touch scroll drives the horizontal travel there too, no horizontal drag
+ * required. It is gated only on viewport height and allowed motion via
+ * `gsap.matchMedia`: below 640px tall, or with reduced motion on, the exact
+ * same track falls back to a native horizontally-swipeable scroller with
+ * scroll-snap — so the content and the interaction survive without the pin.
+ * The wrapper only becomes `overflow: hidden` while the pinned version is
+ * actually active.
  *
  * Palette is strictly white + #0B6E4F (the brand emerald) and its alphas.
  */
@@ -101,9 +104,11 @@ export function MyServices() {
 
     // Below 640px of viewport height a full-height pinned stage cannot hold the
     // heading and a 4:5 card at a sensible size, so the pin is skipped entirely
-    // and the carousel stays a plain native scroller.
+    // and the carousel stays a plain native scroller. This now runs at every
+    // width (mobile included) — vertical scroll/swipe drives the horizontal
+    // travel everywhere; only the height and reduced-motion checks opt out.
     mm.add(
-      "(min-width: 768px) and (min-height: 640px) and (prefers-reduced-motion: no-preference)",
+      "(min-height: 640px) and (prefers-reduced-motion: no-preference)",
       () => {
         const track = trackRef.current;
         const wrap = wrapRef.current;
