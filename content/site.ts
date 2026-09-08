@@ -29,10 +29,15 @@ export const nav: NavItem[] = z.array(navItemSchema).parse([
  * The header carries only the on-page section links, so the top of the site
  * stays minimal. About and Contact are still linked from the footer, which
  * renders the full `nav` above — so no page is orphaned.
+ *
+ * Services leads and Work follows — the reverse of `nav`'s order. On mobile the
+ * pair splits either side of the centred logo, so this puts Services on the
+ * left and Work on the right; on desktop it reads Services then Work. The
+ * footer keeps `nav`'s own order.
  */
-export const headerNav: NavItem[] = nav.filter((item) =>
-  item.href.startsWith("/#"),
-);
+export const headerNav: NavItem[] = nav
+  .filter((item) => item.href.startsWith("/#"))
+  .reverse();
 
 export const conversion: ConversionConfig = conversionConfigSchema.parse({
   bookingUrl:

@@ -45,3 +45,4 @@ yarn-error.log*
 /Homepage Video
 /Images
 /.omc
+.env*
