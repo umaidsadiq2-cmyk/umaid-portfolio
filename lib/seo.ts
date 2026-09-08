@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { services } from "@/content/services";
+import { servicePages } from "@/content/service-pages";
 import { siteMeta } from "@/content/site";
 import type { ServicePage } from "@/lib/schemas";
 
@@ -149,6 +150,39 @@ export function faqJsonLd(faqs: { question: string; answer: string }[]) {
         text: f.answer,
       },
     })),
+  };
+}
+
+/**
+ * SiteNavigationElement schema — the standard structured-data hint for a
+ * site's primary sections, historically used (alongside real internal
+ * linking and traffic patterns) as one signal search engines weigh when
+ * deciding whether to show sitelinks under the main result. It cannot force
+ * sitelinks to appear — that stays entirely algorithmic — but listing the
+ * six service pages by name here, on every page via the root layout, is the
+ * structured-data half of surfacing them as candidates. The other half is
+ * plain sitewide `<a>` links, which the footer now also carries.
+ */
+export function siteNavigationJsonLd() {
+  const servicesLinks = servicePages
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .map((p) => ({ name: p.name, path: `/services/${p.slug}` }));
+
+  const items = [
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/#services" },
+    ...servicesLinks,
+    { name: "Work", path: "/portfolio" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "SiteNavigationElement",
+    name: items.map((i) => i.name),
+    url: items.map((i) => new URL(i.path, siteMeta.url).toString()),
   };
 }
 

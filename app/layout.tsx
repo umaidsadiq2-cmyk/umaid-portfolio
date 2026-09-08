@@ -9,6 +9,7 @@ import {
   personJsonLd,
   websiteJsonLd,
   professionalServiceJsonLd,
+  siteNavigationJsonLd,
 } from "@/lib/seo";
 import { SiteChrome } from "@/components/shared/site-chrome";
 import { WhatsAppFloat } from "@/components/shared/whatsapp-float";
@@ -82,6 +83,12 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`,
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(professionalServiceJsonLd()),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(siteNavigationJsonLd()),
           }}
         />
       </body>

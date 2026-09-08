@@ -1,14 +1,26 @@
 import Link from "next/link";
 import { nav, conversion, siteMeta } from "@/content/site";
 import { profile } from "@/content/profile";
+import { servicePages } from "@/content/service-pages";
 import { whatsappLink } from "@/lib/utils";
 
 export function Footer() {
   const year = 2026;
+  const orderedServicePages = servicePages.slice().sort((a, b) => a.order - b.order);
+
   return (
     <footer className="border-t border-line bg-mist">
       <div className="shell shell-wide py-16 md:py-20">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+        {/*
+          A dedicated Services column, sitewide: previously the six service
+          pages were only reachable from the homepage's My Services cards, so
+          the footer — present on every page — is the one place a crawler (or
+          a visitor three pages deep) can always find all six by name. That
+          consistent, sitewide linking is also the biggest lever this codebase
+          controls over whether Google offers them as sitelinks; the rest is
+          the siteNavigationJsonLd schema in the root layout.
+        */}
+        <div className="grid gap-12 md:grid-cols-[1.2fr_0.8fr_1fr_1fr]">
           <div>
             <p className="font-display text-2xl font-semibold tracking-tight">
               {siteMeta.shortName}
@@ -29,6 +41,22 @@ export function Footer() {
                     className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
                   >
                     {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Services">
+            <p className="eyebrow mb-4">Services</p>
+            <ul className="space-y-2.5">
+              {orderedServicePages.map((page) => (
+                <li key={page.slug}>
+                  <Link
+                    href={`/services/${page.slug}`}
+                    className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
+                  >
+                    {page.name}
                   </Link>
                 </li>
               ))}
