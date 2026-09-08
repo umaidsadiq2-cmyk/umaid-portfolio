@@ -111,17 +111,31 @@ function byPinnedThenPosition<T extends { pinned?: boolean; position: number; cr
 // Brand lists
 // ---------------------------------------------------------------------------
 
+/**
+ * Fetch failures (network unreachable, CMS database paused) return an empty
+ * list rather than throwing. This runs both at request time for the section
+ * listing pages AND at build time for generateStaticParams/sitemap, and a
+ * static build must never fail wholesale because the CMS happens to be
+ * unreachable — the rest of the site has nothing to do with Supabase. Worst
+ * case a section shows no brands yet, instead of the entire deploy failing.
+ */
 async function fetchBrands(section: Section): Promise<Brand[]> {
   // Slide counts come back per item so the card can report IMAGES, not posts.
   // Counting posts would make a brand with four carousels read "4 Designs"
   // while its own page says "16 creatives" — the card must match the gallery.
-  const { data, error } = await supabaseAnon
-    .from("brands")
-    .select(`${BRAND_FIELDS}, items(id, item_slides(count))`)
-    .eq("section", section)
-    .eq("published", true);
-
-  if (error) throw new Error(`Failed to load ${section} brands: ${error.message}`);
+  let data: BrandRow[] | null;
+  try {
+    const res = await supabaseAnon
+      .from("brands")
+      .select(`${BRAND_FIELDS}, items(id, item_slides(count))`)
+      .eq("section", section)
+      .eq("published", true);
+    if (res.error) throw new Error(`Failed to load ${section} brands: ${res.error.message}`);
+    data = res.data;
+  } catch (err) {
+    console.error(`[cms] Failed to load ${section} brands:`, err);
+    return [];
+  }
 
   return (data ?? [])
     .map((row) => {
