@@ -25,14 +25,15 @@ export const portfolioCategories: PortfolioCategory[] = [
   {
     title: SECTIONS.social.label,
     blurb:
-      "Brand-led posts, carousels, and campaigns that grow engaged audiences.",
+      "Social media posters, product campaigns, and AI product photoshoots for food, health, fragrance, and automotive brands.",
     href: SECTIONS.social.basePath,
     img: "/images/portfolio-creative",
     label: "Creative",
   },
   {
     title: SECTIONS.video.label,
-    blurb: "Short-form and brand films cut for retention, shares, and action.",
+    blurb:
+      "AI video ads, short-form video ads, and logo animations cut for retention, shares, and action.",
     href: SECTIONS.video.basePath,
     img: "/images/portfolio-video",
     label: "Video",

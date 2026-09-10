@@ -44,5 +44,6 @@ yarn-error.log*
 /scripts
 /Homepage Video
 /Images
+/Portfolio
 /.omc
 .env*

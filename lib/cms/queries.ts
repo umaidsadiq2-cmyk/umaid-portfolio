@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { supabaseAnon } from "@/lib/supabase/anon";
+import { staticBrands, staticVideoBrand } from "@/content/work";
 import { parseVideoUrl } from "./video-url";
 import type {
   Brand,
@@ -119,6 +120,20 @@ function byPinnedThenPosition<T extends { pinned?: boolean; position: number; cr
  * unreachable — the rest of the site has nothing to do with Supabase. Worst
  * case a section shows no brands yet, instead of the entire deploy failing.
  */
+/**
+ * Work shipped with the site (content/work.ts) leads, then CMS brands. A CMS
+ * brand reusing a static slug is dropped — the static one owns that URL.
+ *
+ * Static work is merged OUTSIDE unstable_cache on purpose: it is part of the
+ * code, so it must change with every deploy. Inside the data cache (which
+ * survives between builds) an edited count or new item could stay stale.
+ */
+function withStatic(section: Section, cms: Brand[]): Brand[] {
+  const local = staticBrands(section);
+  const taken = new Set(local.map((b) => b.slug));
+  return [...local, ...cms.filter((b) => !taken.has(b.slug))];
+}
+
 async function fetchBrands(section: Section): Promise<Brand[]> {
   // Slide counts come back per item so the card can report IMAGES, not posts.
   // Counting posts would make a brand with four carousels read "4 Designs"
@@ -156,20 +171,23 @@ async function fetchBrands(section: Section): Promise<Brand[]> {
 }
 
 /** Brand cards for a section landing page, pinned first. */
-export function getBrands(section: Section): Promise<Brand[]> {
-  return unstable_cache(() => fetchBrands(section), ["cms", "brands", section], {
+export async function getBrands(section: Section): Promise<Brand[]> {
+  const cms = await unstable_cache(() => fetchBrands(section), ["cms", "brands", section], {
     tags: [tags.brands(section), tags.all],
     revalidate: 3600,
   })();
+  return withStatic(section, cms);
 }
 
 /** Slugs for generateStaticParams / sitemap. */
-export function getBrandSlugs(section: Section): Promise<string[]> {
-  return unstable_cache(
+export async function getBrandSlugs(section: Section): Promise<string[]> {
+  const cms = await unstable_cache(
     async () => (await fetchBrands(section)).map((b) => b.slug),
     ["cms", "slugs", section],
     { tags: [tags.brands(section), tags.all], revalidate: 3600 },
   )();
+  const local = staticBrands(section).map((b) => b.slug);
+  return [...local, ...cms.filter((slug) => !local.includes(slug))];
 }
 
 // ---------------------------------------------------------------------------
@@ -258,6 +276,10 @@ export function getVideoBrand(slug: string): Promise<{
   brand: Brand;
   videos: VideoItem[];
 } | null> {
+  // Static collections bypass the data cache — see withStatic above.
+  const local = staticVideoBrand(slug);
+  if (local) return Promise.resolve(local);
+
   return unstable_cache(
     async () => {
       const detail = await fetchBrandDetail("video", slug);
