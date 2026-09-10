@@ -146,6 +146,44 @@ const VIDEO: StaticVideoBrand[] = [
   },
 ];
 
+/**
+ * Video work by category, for the Video Content page — the same one-page,
+ * category-by-category layout as the social creatives.
+ */
+export type VideoCategory = {
+  slug: string;
+  label: string;
+  description: string;
+  videos: VideoItem[];
+};
+
+const VIDEO_COPY: Record<string, { label: string; description: string }> = {
+  "ai-video-ads": {
+    label: "AI Video Ads",
+    description:
+      "I produce product and brand commercials with AI video tools — cinematic visuals and motion at a fraction of the cost and turnaround of a traditional shoot, ready for social, web, and paid campaigns.",
+  },
+  "video-ads": {
+    label: "Video Ads",
+    description:
+      "I edit short-form video ads and reels for Meta, Instagram, and TikTok — pacing, captions, and motion built to hold attention in the first seconds and drive viewers to act.",
+  },
+  "logo-animations": {
+    label: "Logo Animation",
+    description:
+      "I create animated logo reveals and brand intros that give a business a polished, memorable signature across videos, reels, ads, and presentations.",
+  },
+};
+
+export function videoCategories(): VideoCategory[] {
+  return VIDEO.flatMap((b) => {
+    const data = staticVideoBrand(b.slug);
+    const copy = VIDEO_COPY[b.slug];
+    if (!data || !copy) return [];
+    return [{ slug: b.slug, label: copy.label, description: copy.description, videos: data.videos }];
+  });
+}
+
 function count(n: number): string[] {
   return Array.from({ length: n }, (_, i) => String(i + 1).padStart(2, "0"));
 }

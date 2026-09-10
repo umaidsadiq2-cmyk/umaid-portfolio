@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { siteMeta } from "@/content/site";
+import { videoCategories } from "@/content/work";
 import { BrandGrid } from "@/components/portfolio/brand-grid";
+import { VideoCategoryShowcase } from "@/components/portfolio/video-category-showcase";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/sections/page-header";
 import { FinalCta } from "@/components/sections/final-cta";
@@ -14,7 +17,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = buildMetadata({
   title: "Video Content",
   description:
-    "Short-form video, brand films, and motion content by Muhammad Umaid Sadiq, cut for retention.",
+    "AI video ads, short-form video ads, and logo animations by Muhammad Umaid Sadiq, cut for retention.",
   path: PATH,
 });
 
@@ -25,12 +28,33 @@ const crumbs = [
 ];
 
 /**
- * Brand-first, mirroring Social Media Creatives. This replaces the previous flat
- * WorkCard grid so both sections share one structure — one card component, one
- * set of CMS controls.
+ * Every video on one page, by category — mirroring Social Media Creatives.
+ * The static collections are already shown above, so only CMS-added brands
+ * appear below as client cards.
  */
 export default async function VideoContentPage() {
-  const brands = await getBrands("video");
+  const categories = videoCategories();
+  const shown = new Set(categories.map((c) => c.slug));
+  const cmsBrands = (await getBrands("video")).filter((b) => !shown.has(b.slug));
+
+  const galleryJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Video Content",
+    url: new URL(PATH, siteMeta.url).toString(),
+    author: { "@type": "Person", name: siteMeta.name },
+    hasPart: categories.flatMap((category) =>
+      category.videos.map((video) => ({
+        "@type": "VideoObject",
+        name: video.title,
+        description: category.description,
+        ...(video.thumbUrl
+          ? { thumbnailUrl: new URL(video.thumbUrl, siteMeta.url).toString() }
+          : {}),
+        contentUrl: new URL(video.url, siteMeta.url).toString(),
+      })),
+    ),
+  };
 
   return (
     <>
@@ -39,6 +63,10 @@ export default async function VideoContentPage() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(breadcrumbJsonLd(crumbs)),
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryJsonLd) }}
       />
       <PageHeader
         eyebrow="Video content"
@@ -49,13 +77,20 @@ export default async function VideoContentPage() {
         }
       />
       <section className="bg-mist">
-        <div className="shell shell-wide py-20 md:py-28">
-          <BrandGrid
-            brands={brands}
-            basePath={PATH}
-            itemNoun={SECTIONS.video.itemNoun}
-            emptyMessage="Video work is being added here shortly."
-          />
+        <div className="shell shell-wide py-16 md:py-24">
+          <VideoCategoryShowcase categories={categories} />
+
+          {cmsBrands.length > 0 && (
+            <div className="mt-24">
+              <p className="eyebrow mb-8">More client work</p>
+              <BrandGrid
+                brands={cmsBrands}
+                basePath={PATH}
+                itemNoun={SECTIONS.video.itemNoun}
+                emptyMessage=""
+              />
+            </div>
+          )}
         </div>
       </section>
       <FinalCta />
