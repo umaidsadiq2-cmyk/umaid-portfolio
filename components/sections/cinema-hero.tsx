@@ -336,7 +336,7 @@ export function CinemaHero() {
               Muhammad Umaid Sadiq
             </span>
             <span
-              data-hero-in
+              data-hero-in="rise"
               style={{ "--hero-delay": "0.26s" } as React.CSSProperties}
               className="mt-6 block max-w-5xl font-display text-[clamp(2.75rem,8.5vw,7rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-white"
             >

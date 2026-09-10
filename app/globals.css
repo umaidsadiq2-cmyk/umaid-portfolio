@@ -861,6 +861,20 @@
   [data-hero-in] {
     animation: hero-in 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) var(--hero-delay, 0s) both;
   }
+  /* The headline itself rises WITHOUT the fade: Chrome ignores an element whose
+     first paint is fully transparent when choosing the LCP, so a fade from
+     opacity 0 would disqualify the headline and hand LCP to a later element. */
+  [data-hero-in="rise"] {
+    animation-name: hero-rise;
+  }
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(28px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 @keyframes hero-in {
   from {
