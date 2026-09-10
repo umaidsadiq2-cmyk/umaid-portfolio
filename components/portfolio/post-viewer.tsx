@@ -16,9 +16,12 @@ import type { CreativePost } from "@/lib/cms/types";
 export function PostViewer({
   post,
   onClose,
+  startIndex = 0,
 }: {
   post: CreativePost | null;
   onClose: () => void;
+  /** Slide to open on — lets a gallery open its whole set at the clicked image. */
+  startIndex?: number;
 }) {
   const [current, setCurrent] = useState<CreativePost | null>(post);
   const [open, setOpen] = useState(false);
@@ -40,7 +43,7 @@ export function PostViewer({
   useEffect(() => {
     if (post) {
       setCurrent(post);
-      setSlide(0);
+      setSlide(Math.max(0, Math.min(post.slides.length - 1, startIndex)));
       setDx(0);
       const r = requestAnimationFrame(() => setOpen(true));
       return () => cancelAnimationFrame(r);
@@ -48,7 +51,7 @@ export function PostViewer({
     setOpen(false);
     const t = setTimeout(() => setCurrent(null), 260);
     return () => clearTimeout(t);
-  }, [post]);
+  }, [post, startIndex]);
 
   // Body scroll lock (preserves the grid's scroll position) + keyboard nav.
   useEffect(() => {

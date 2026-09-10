@@ -1,61 +1,92 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PostViewer } from "./post-viewer";
 import { cn } from "@/lib/utils";
-import type { CreativePost, Poster } from "@/lib/cms/types";
+import type { CreativePost } from "@/lib/cms/types";
 import type { Industry } from "@/content/work";
 
 /**
- * All social media creatives on one page, filtered by industry.
+ * All social media creatives on one page, grouped by industry.
  *
- * A row of industry buttons sits above the grid; choosing one swaps in that
- * industry's posters and a short note on the work done for it. The choice is
- * mirrored to the URL hash (#automotive, #perfume…) so a specific industry can
- * be linked to directly, without separate pages.
+ * Every industry is rendered in order as its own block: the text column stays
+ * fixed (sticky) while that industry's images scroll, and when its images run
+ * out the page flows straight into the next industry — no click needed. The
+ * buttons above jump to an industry and highlight whichever one is on screen.
+ * Each block carries the industry slug as its id, so #automotive, #perfume…
+ * still deep-link.
  *
  * Posters keep their natural aspect ratio rather than a square crop — many are
  * full 3×3 feed grids that would lose most of their content if cropped.
+ *
+ * The viewer receives every poster on the page as one set, so Next / Previous
+ * walk through all of them without closing.
  */
 export function IndustryShowcase({ industries }: { industries: Industry[] }) {
   const [active, setActive] = useState(industries[0]?.slug ?? "");
-  const [open, setOpen] = useState<Poster | null>(null);
+  const [openAt, setOpenAt] = useState<number | null>(null);
+  const blocks = useRef<Map<string, HTMLElement>>(new Map());
+
+  // One flat, ordered list of every poster, for the viewer.
+  const { allPost, offsets } = useMemo(() => {
+    const slides = industries.flatMap((i) => i.posters);
+    const offsets = new Map<string, number>();
+    let n = 0;
+    for (const industry of industries) {
+      offsets.set(industry.slug, n);
+      n += industry.posters.length;
+    }
+    const allPost: CreativePost | null = slides[0]
+      ? { id: "all-creatives", slides, cover: slides[0], isCarousel: slides.length > 1, pinned: false }
+      : null;
+    return { allPost, offsets };
+  }, [industries]);
+
+  // Highlight the industry whose block is crossing the upper part of the viewport.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        }
+      },
+      { rootMargin: "-35% 0px -60% 0px" },
+    );
+    blocks.current.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [industries]);
 
   // Honour a deep link (#snacks) on first load.
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (industries.some((i) => i.slug === hash)) setActive(hash);
-  }, [industries]);
+    const el = blocks.current.get(hash);
+    if (el) {
+      setActive(hash);
+      el.scrollIntoView();
+    }
+  }, []);
 
   const select = (slug: string) => {
     setActive(slug);
     window.history.replaceState(null, "", `#${slug}`);
+    blocks.current.get(slug)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const current = industries.find((i) => i.slug === active) ?? industries[0];
-  if (!current) return null;
-
-  const viewerPost: CreativePost | null = open
-    ? { id: open.src, slides: [open], cover: open, isCarousel: false, pinned: false }
-    : null;
+  if (industries.length === 0) return null;
 
   return (
     <>
       <div
-        role="tablist"
         aria-label="Industries"
         className="-mx-[var(--gutter)] flex gap-2.5 overflow-x-auto px-[var(--gutter)] pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden"
       >
         {industries.map((industry) => {
-          const selected = industry.slug === current.slug;
+          const selected = industry.slug === active;
           return (
             <button
               key={industry.slug}
               type="button"
-              role="tab"
-              id={`tab-${industry.slug}`}
-              aria-selected={selected}
-              aria-controls="industry-panel"
+              aria-current={selected ? "true" : undefined}
               onClick={() => select(industry.slug)}
               className={cn(
                 "shrink-0 rounded-full border px-5 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald",
@@ -70,60 +101,74 @@ export function IndustryShowcase({ industries }: { industries: Industry[] }) {
         })}
       </div>
 
-      <div
-        id="industry-panel"
-        role="tabpanel"
-        aria-labelledby={`tab-${current.slug}`}
-        className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-12"
-      >
-        <div className="lg:col-span-4">
-          <div className="lg:sticky lg:top-28">
-            <p className="eyebrow">Industry</p>
-            <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              {current.label}
-            </h2>
-            <p className="mt-5 max-w-md leading-relaxed text-ink-soft">
-              {current.description}
-            </p>
-            <p className="mt-6 text-sm font-medium text-muted">
-              {current.posters.length}{" "}
-              {current.posters.length === 1 ? "creative" : "creatives"}
-            </p>
-          </div>
-        </div>
+      {industries.map((industry, idx) => {
+        const offset = offsets.get(industry.slug) ?? 0;
+        return (
+          <section
+            key={industry.slug}
+            id={industry.slug}
+            ref={(el) => {
+              if (el) blocks.current.set(industry.slug, el);
+              else blocks.current.delete(industry.slug);
+            }}
+            aria-labelledby={`${industry.slug}-title`}
+            className={cn(
+              "grid scroll-mt-28 gap-10 lg:grid-cols-12 lg:gap-12",
+              idx === 0 ? "mt-10" : "mt-20 md:mt-28",
+            )}
+          >
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-28">
+                <p className="eyebrow">Industry</p>
+                <h2
+                  id={`${industry.slug}-title`}
+                  className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl"
+                >
+                  {industry.label}
+                </h2>
+                <p className="mt-5 max-w-md leading-relaxed text-ink-soft">
+                  {industry.description}
+                </p>
+              </div>
+            </div>
 
-        <ul
-          key={current.slug}
-          className={cn(
-            "grid gap-4 sm:gap-5 lg:col-span-8",
-            current.posters.length > 1 && "sm:grid-cols-2",
-          )}
-        >
-          {current.posters.map((poster) => (
-            <li key={poster.src}>
-              <button
-                type="button"
-                onClick={() => setOpen(poster)}
-                aria-label={`Open ${poster.alt}`}
-                className="group block w-full overflow-hidden rounded-lg border border-line bg-canvas transition-[transform,box-shadow,border-color] duration-500 ease-out hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_28px_60px_-36px_rgba(11,16,14,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={poster.src}
-                  alt={poster.alt}
-                  width={poster.width}
-                  height={poster.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-auto w-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+            <ul
+              className={cn(
+                "grid gap-4 sm:gap-5 lg:col-span-8",
+                industry.posters.length > 1 && "sm:grid-cols-2",
+              )}
+            >
+              {industry.posters.map((poster, i) => (
+                <li key={poster.src}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenAt(offset + i)}
+                    aria-label={`Open ${poster.alt}`}
+                    className="group block w-full overflow-hidden rounded-lg border border-line bg-canvas transition-[transform,box-shadow,border-color] duration-500 ease-out hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_28px_60px_-36px_rgba(11,16,14,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={poster.src}
+                      alt={poster.alt}
+                      width={poster.width}
+                      height={poster.height}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-auto w-full transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
 
-      <PostViewer post={viewerPost} onClose={() => setOpen(null)} />
+      <PostViewer
+        post={openAt === null ? null : allPost}
+        startIndex={openAt ?? 0}
+        onClose={() => setOpenAt(null)}
+      />
     </>
   );
 }
