@@ -851,3 +851,24 @@
     transform: scale(1);
   }
 }
+
+/* Hero entrance — each line of the home hero rises in once on load, staggered
+   via --hero-delay. Pure CSS on purpose: the headline is the page's LCP
+   element, and this starts at first paint rather than waiting for the JS
+   bundle to hydrate (the old GSAP version pushed LCP out by seconds).
+   The easing approximates GSAP's power3.out. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-in] {
+    animation: hero-in 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) var(--hero-delay, 0s) both;
+  }
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

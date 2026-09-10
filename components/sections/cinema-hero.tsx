@@ -56,17 +56,11 @@ export function CinemaHero() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Hero entrance — the copy rises in once, on load. It animates the CHILDREN
-      // of .cinema-s1 while the scroll cross-fade below animates .cinema-s1
-      // itself, so the two never fight over the same properties.
-      gsap.from("[data-hero-in]", {
-        y: 28,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        stagger: 0.11,
-        delay: 0.15,
-      });
+      // The hero entrance (the copy rising in once on load) is a CSS animation
+      // — see `[data-hero-in]` in globals.css — not GSAP. The headline is the
+      // page's Largest Contentful Paint element: a JS `from({ opacity: 0 })`
+      // hid it until the bundle had downloaded and hydrated, pushing LCP out by
+      // seconds on mobile. CSS starts at first paint instead.
 
       // The section is two screens tall, so slide 2 is naturally centred at 50%
       // of it. The cross-fade is timed against that: slide 1 is gone by 34% and
@@ -336,12 +330,14 @@ export function CinemaHero() {
           <h1 className="flex flex-col items-center">
             <span
               data-hero-in
+              style={{ "--hero-delay": "0.15s" } as React.CSSProperties}
               className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-white/70 md:text-xs"
             >
               Muhammad Umaid Sadiq
             </span>
             <span
               data-hero-in
+              style={{ "--hero-delay": "0.26s" } as React.CSSProperties}
               className="mt-6 block max-w-5xl font-display text-[clamp(2.75rem,8.5vw,7rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-white"
             >
               Digital Marketing Expert
@@ -349,6 +345,7 @@ export function CinemaHero() {
           </h1>
           <p
             data-hero-in
+            style={{ "--hero-delay": "0.37s" } as React.CSSProperties}
             className="mt-7 max-w-xl text-base leading-relaxed text-white/75 md:text-lg"
           >
             5+ Years of Experience in Digital Growth
