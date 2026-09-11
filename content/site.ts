@@ -12,8 +12,21 @@ export const siteMeta = {
   role: "Digital Marketing Expert",
   description:
     "Muhammad Umaid Sadiq is a social media marketing expert helping businesses across Pakistan, the UAE, UK, Canada, and USA grow with social media marketing and management, content creation, graphic design, video editing, and animation.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://umaidsadiq.com",
+  url: canonicalSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
 } as const;
+
+/**
+ * The one address search engines should see. The live domain redirects the
+ * bare `umaidsadiq.com` to `www.umaidsadiq.com`, so every canonical, sitemap
+ * entry, and structured-data URL must use the www host — pointing them at the
+ * bare domain made Google report each page as "Page with redirect" and skip
+ * indexing it. The env var still wins for local/preview builds, but a bare
+ * umaidsadiq.com value is normalised to www rather than trusted.
+ */
+function canonicalSiteUrl(fromEnv: string | undefined): string {
+  const url = (fromEnv ?? "https://www.umaidsadiq.com").replace(/\/+$/, "");
+  return url.replace(/^https?:\/\/umaidsadiq\.com$/i, "https://www.umaidsadiq.com");
+}
 
 // "Work" and "Services" target the matching sections on the home page; the
 // full portfolio still lives at /portfolio, reached from the Selected work
