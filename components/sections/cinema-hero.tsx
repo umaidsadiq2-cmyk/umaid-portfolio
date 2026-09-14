@@ -72,7 +72,10 @@ export function CinemaHero() {
           trigger: root,
           start: "top top",
           end: "34% top",
-          scrub: 0.6,
+          // scrub: true (no lag): Lenis already smooths the scroll, and a
+          // lagging scrub kept the slides drifting after the page stopped,
+          // sliding the "Hire Me" button out from under a press.
+          scrub: true,
         },
       });
 
@@ -87,7 +90,7 @@ export function CinemaHero() {
             trigger: root,
             start: "24% top",
             end: "50% top",
-            scrub: 0.6,
+            scrub: true,
           },
         },
       );

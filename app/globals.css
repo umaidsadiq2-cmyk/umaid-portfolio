@@ -301,6 +301,16 @@
   .hero-light .cursor-ring {
     opacity: 0 !important;
   }
+  /*
+    Meeting dialog opened from the hero ("Hire Me"): html.hero-light is still
+    set, but the spotlight lives inside the hero stage, underneath the dialog.
+    Without this the dialog's buttons showed no cursor at all, so the standard
+    emerald cursor comes back while the dialog is open.
+  */
+  html.has-cursor.meeting-open .cursor-dot,
+  html.has-cursor.meeting-open .cursor-ring {
+    opacity: 1 !important;
+  }
   @media (pointer: fine) {
     html.hero-light,
     html.hero-light a,

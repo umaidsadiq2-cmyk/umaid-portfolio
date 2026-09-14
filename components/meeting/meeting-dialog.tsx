@@ -105,6 +105,8 @@ export function MeetingDialog() {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Lets globals.css restore the site cursor over the dialog (see .meeting-open).
+    document.documentElement.classList.add("meeting-open");
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
@@ -112,6 +114,7 @@ export function MeetingDialog() {
     if (statusRef.current !== "sent") nameRef.current?.focus();
     return () => {
       document.body.style.overflow = prevOverflow;
+      document.documentElement.classList.remove("meeting-open");
       document.removeEventListener("keydown", onKey);
     };
   }, [open, close]);

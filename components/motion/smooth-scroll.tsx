@@ -39,9 +39,26 @@ export function SmoothScroll() {
     };
     document.addEventListener("visibilitychange", onVisibility);
 
+    /*
+     * A mouse press halts any smoothing still in flight. Lenis keeps easing the
+     * page for about a second after the wheel stops (longer with a trackpad's
+     * momentum), so a button could slide out from under the pointer between
+     * press and release, and the browser then drops the click. Stopping on the
+     * press, like native scrolling does, keeps the target where the user aimed.
+     * stop() resets the animation to the current position; start() re-enables
+     * scrolling immediately.
+     */
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || !lenis.isScrolling) return;
+      lenis.stop();
+      lenis.start();
+    };
+    window.addEventListener("pointerdown", onPointerDown, { capture: true, passive: true });
+
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pointerdown", onPointerDown, { capture: true });
       lenis.destroy();
     };
   }, []);
