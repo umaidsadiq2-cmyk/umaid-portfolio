@@ -24,7 +24,7 @@ export function CategoryCard({
         <div className="overflow-hidden">
           <Photo
             src={category.img}
-            alt={`${category.title} — portfolio by Muhammad Umaid Sadiq`}
+            alt={`${category.title} portfolio by Muhammad Umaid Sadiq`}
             label={category.label}
             width={1200}
             height={800}

@@ -35,7 +35,7 @@ export function Avatar({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      alt="Muhammad Umaid Sadiq — avatar"
+      alt="Muhammad Umaid Sadiq avatar"
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       draggable={false}

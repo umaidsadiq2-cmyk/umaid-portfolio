@@ -66,5 +66,5 @@ export const conversion: ConversionConfig = conversionConfigSchema.parse({
       "Hi Umaid, I'd like to discuss a project.",
   },
   email: process.env.INQUIRY_TO ?? "hello@umaidsadiq.com",
-  primaryCtaLabel: "Book a consultation",
+  primaryCtaLabel: "Create a meeting",
 });

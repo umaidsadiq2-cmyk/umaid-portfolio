@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/sections/page-header";
 import { ContactForm } from "@/components/sections/contact-form";
+import { MeetingTextButton } from "@/components/meeting/meeting-button";
 import { conversion } from "@/content/site";
 import { profile } from "@/content/profile";
 import { whatsappLink } from "@/lib/utils";
@@ -9,7 +10,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
   description:
-    "Book a consultation with Muhammad Umaid Sadiq, or send a message. Working with businesses across Pakistan, USA, UK, Canada & UAE.",
+    "Create a meeting with Muhammad Umaid Sadiq, or send a message. Working with businesses across Pakistan, USA, UK, Canada & UAE.",
   path: "/contact",
 });
 
@@ -19,7 +20,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Let's talk"
         title="Tell me what you want to grow."
-        intro="Book a free consultation or send a message. I reply within one business day."
+        intro="Create a meeting or send a message. I reply within one business day."
       />
 
       <section className="bg-mist">
@@ -31,14 +32,9 @@ export default function ContactPage() {
           <aside className="space-y-8">
             <div>
               <p className="eyebrow mb-3">Fastest path</p>
-              <a
-                href={conversion.bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-display text-xl font-semibold tracking-tight text-emerald hover:text-emerald-deep"
-              >
-                Book a consultation →
-              </a>
+              <MeetingTextButton className="text-left font-display text-xl font-semibold tracking-tight text-emerald hover:text-emerald-deep">
+                Create a meeting →
+              </MeetingTextButton>
               <p className="mt-2 text-sm text-ink-soft">
                 A focused 30-minute call to map your fastest path to growth.
               </p>

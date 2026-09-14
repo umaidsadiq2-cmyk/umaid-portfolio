@@ -111,7 +111,7 @@ export function Navbar() {
         */}
         <Link
           href="/"
-          aria-label={`${siteMeta.shortName} — home`}
+          aria-label={`${siteMeta.shortName} home`}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <span className="relative block h-10 w-10">

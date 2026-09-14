@@ -13,17 +13,17 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
   {
     slug: "social-media-marketing",
     name: "Social Media Marketing",
-    metaTitle: "Social Media Marketing Services | Muhammad Umaid Sadiq",
+    metaTitle: "Social Media Marketing Services for Small Business",
     metaDescription:
-      "Social media marketing services for businesses in Pakistan, the UAE, Saudi Arabia, the UK, and the USA. Strategy, content, and paid growth run as one system.",
+      "Social media marketing services for small businesses in Pakistan, the UAE, UK, and USA. Strategy, content, and ads from a freelancer, with agency-level quality.",
     ogTitle: "Social Media Marketing Services That Turn Followers Into Customers",
     ogDescription:
-      "Strategy, content, community management, and Meta advertising run as one system, built to turn followers into paying customers rather than just likes.",
+      "A social media marketing expert in Pakistan running strategy, content, community management, and Meta ads as one system, built to turn followers into customers.",
     eyebrow: "Social Media Marketing",
     h1: "Social Media Marketing Services That Turn Followers Into Paying Customers",
     intro: [
       "Posting consistently is not the same thing as growing. Most business pages stay active yet quiet, because content and strategy are rarely built to work together.",
-      "I run social media marketing as one connected system, joining content, community management, and Meta advertising so every post moves your business toward real customers, not just likes.",
+      "As a social media marketing expert based in Pakistan and working with clients in the USA, UAE, and beyond, I run social media marketing as one connected system, joining content, community management, and Meta advertising so every post moves your business toward real customers, not just likes.",
     ],
     heroImage: "/images/services/social-media-marketing.webp",
     heroImageAlt: "Smartphone displaying social media apps at night, representing social media marketing services",
@@ -33,29 +33,31 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
         "A search for social media marketing services usually comes from one of two places: a business that tried posting on its own and stalled, or one that never had a real plan for its channels to begin with.",
         "Either way, the fix looks the same. Social platforms reward consistency, but consistency without a clear message and a defined audience just produces noise. My approach starts with understanding who your customer actually is, what they respond to, and where they already spend their time online.",
         "From there, content, engagement, and paid promotion are planned together instead of separately, so one campaign idea can appear as an organic post, a story sequence, and a Meta ad without feeling repeated or disconnected.",
+        "That plan is your social media marketing strategy: a written roadmap covering your audience, the platforms worth your time, the content themes that fit your brand, and the results each month should move toward. It is what separates a business that grows on social media from one that simply stays busy there.",
       ],
     },
     offerings: {
-      heading: "What Is Included In My Social Media Marketing Service",
+      heading: "What Is Included: My Social Media Marketing Services List",
       items: [
-        { title: "Platform strategy", description: "A clear plan for which platforms matter for your business, what to post, and how often, based on where your customers actually are." },
+        { title: "Social media marketing strategy", description: "A clear plan for which platforms matter for your business, what to post, and how often, based on where your customers actually are." },
         { title: "Content calendar and scheduling", description: "A structured monthly calendar so your pages stay active without you needing to think about it every day." },
         { title: "Community management", description: "Comments, messages, and enquiries handled promptly, so interested followers get a response instead of being ignored." },
-        { title: "Meta advertising support", description: "Paid promotion planned alongside organic content, connecting naturally with my dedicated Meta Ads service when a campaign needs wider reach." },
+        { title: "Social media ads", description: "Paid promotion on Facebook and Instagram planned alongside organic content, connecting naturally with my dedicated Meta Ads service when a campaign needs wider reach." },
         { title: "Performance reporting", description: "Regular updates on what is working, explained in plain language rather than a dashboard full of numbers with no context." },
       ],
     },
     process: {
-      heading: "How I Work",
+      heading: "The 5 Steps In My Social Media Marketing Process",
       steps: [
         { title: "Understand your business", description: "A short discovery call to learn about your products, customers, and what growth means for you specifically." },
-        { title: "Build the content plan", description: "A monthly plan covering themes, formats, and posting frequency, matched to your industry and audience." },
-        { title: "Create and manage", description: "Content gets produced, scheduled, and published, while comments and messages are monitored and answered." },
+        { title: "Build the strategy", description: "A monthly plan covering platforms, themes, formats, and posting frequency, matched to your industry and audience." },
+        { title: "Create the content", description: "Posts, graphics, and videos are produced to fit the plan and your brand, ready to schedule ahead of time." },
+        { title: "Publish and manage", description: "Content goes live on schedule, while comments and messages are monitored and answered promptly." },
         { title: "Review and adjust", description: "Performance is reviewed regularly, and the plan is refined based on what your audience actually responds to." },
       ],
     },
     benefits: {
-      heading: "Benefits For Your Business",
+      heading: "Benefits Of Social Media Marketing For Your Business",
       items: [
         "A consistent, professional presence across every social channel",
         "Content built around your real audience instead of guesswork",
@@ -72,11 +74,11 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     locations: {
       heading: "Social Media Marketing Services Across Multiple Regions",
       items: [
-        { region: "Pakistan", blurb: "Businesses in Karachi, Lahore, and Islamabad often need a social presence that feels credible to a specific local audience while still supporting national growth. As a Pakistani social media marketing freelancer, I build campaigns around how customers in these cities actually shop and engage." },
-        { region: "UAE", blurb: "For businesses in Dubai and across the UAE, social media usually needs to work for a mix of local residents and an international audience at once. I plan content and Meta campaigns that speak to both without losing focus." },
+        { region: "Pakistan", blurb: "Businesses in Karachi, Lahore, and Islamabad often need a social presence that feels credible to a specific local audience while still supporting national growth. As a Pakistani social media marketing freelancer, I build campaigns around how customers in these cities actually shop and engage, giving you the quality you would expect from a social media marketing agency in Karachi, Lahore, or Islamabad while you work directly with the person doing the work." },
+        { region: "UAE", blurb: "For businesses in Dubai and across the UAE, social media usually needs to work for a mix of local residents and an international audience at once. I plan content and Meta campaigns that speak to both without losing focus, offering what businesses usually look for in a social media marketing agency in the UAE, with direct access to the expert running the work." },
         { region: "Saudi Arabia", blurb: "In Riyadh and other major Saudi cities, social platforms are central to how customers discover new businesses. I build social media marketing plans suited to Saudi audiences and shopping habits." },
         { region: "United Kingdom", blurb: "For businesses in London and across the UK, I focus on clear, professional messaging suited to a more research driven audience before they commit to a purchase or enquiry." },
-        { region: "United States", blurb: "Working with businesses across the USA, I build social strategies suited to competitive, high volume markets where consistency and paid support matter from day one." },
+        { region: "United States", blurb: "Working with businesses across the USA, I build social strategies suited to competitive, high volume markets where consistency and paid support matter from day one, often as a leaner alternative to hiring a social media marketing agency in the USA." },
         { region: "Canada", blurb: "For Canadian businesses, I build social plans that respect a more measured buying pattern, focusing on trust and clarity over aggressive promotion." },
       ],
     },
@@ -86,10 +88,15 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
       { question: "How long does it take to see results?", answer: "Organic growth is gradual and usually shows a clear shift within the first two to three months of consistent activity. If faster visibility is the priority, Meta advertising can be added to reach a wider audience sooner while the organic side builds in the background." },
       { question: "Can you manage social media for a business outside Pakistan?", answer: "Yes. I work remotely with businesses across the UAE, Saudi Arabia, the UK, the USA, and Canada, and calls are scheduled to suit your time zone." },
       { question: "Do you also run the Meta ads for my page?", answer: "Yes, Meta advertising can be included as part of this service or handled separately through my dedicated Meta Ads service, depending on what your campaign needs." },
+      { question: "Should I hire a social media marketing freelancer or an agency?", answer: "Social media marketing agencies and larger companies usually bring a bigger team, but also account managers, handoffs, and higher fees. As a freelancer, you work directly with the person planning and running your social media, which means faster decisions, clearer communication, and a lower cost, without giving up strategy, content, or ads. For most small and growing businesses, that is the better fit." },
+      { question: "How do I choose the best social media marketing expert in Pakistan?", answer: "Look past follower counts and focus on three things: real work you can see, a clear process that starts with strategy rather than just posting, and honest reporting on leads and sales instead of likes alone. Ask to see examples in your industry, and make sure you know exactly who will be running your account day to day." },
+      { question: "Is social media marketing worth it for a small business?", answer: "Yes, and often more than for large brands. Social media lets a small business reach the exact local or niche audience it serves without a big advertising budget, build trust through consistent content, and turn followers into enquiries through messages and ads. The key is a focused plan on the one or two platforms your customers actually use, rather than trying to be everywhere at once." },
+      { question: "Can I see examples of your social media marketing work?", answer: "Yes. The Work section of this website shows real social media creatives I have designed for brands in automotive, drinks and ice cream, health care, perfume, snacks, and real estate, along with video ads and logo animations." },
+      { question: "Do you work with local businesses in Karachi, Lahore, and Islamabad?", answer: "Yes. I work with businesses across Pakistan's major cities, as well as clients abroad, and everything from the strategy call to monthly reporting can happen remotely, so your location never limits the service." },
     ],
     cta: {
       heading: "Ready For Social Media That Actually Grows Your Business?",
-      text: "Book a free consultation and I will walk you through exactly what a working social media plan would look like for your business, with no pressure and no generic pitch.",
+      text: "Create a meeting and I will walk you through exactly what a working social media plan would look like for your business, with no pressure and no generic pitch.",
     },
     relatedSlugs: ["meta-ads", "graphic-design", "video-editing"],
     order: 0,
@@ -174,7 +181,7 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     ],
     cta: {
       heading: "Stop Guessing With Your Ad Budget",
-      text: "Book a free consultation and I will review your current advertising, or help you plan your first campaign properly from the start.",
+      text: "Create a meeting and I will review your current advertising, or help you plan your first campaign properly from the start.",
     },
     relatedSlugs: ["social-media-marketing", "ai-ads", "graphic-design"],
     order: 1,
@@ -258,7 +265,7 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     ],
     cta: {
       heading: "Give Your Brand A Design Standard Worth Trusting",
-      text: "Book a free consultation and share what you need designed. I will explain how a consistent visual system could work for your business.",
+      text: "Create a meeting and share what you need designed. I will explain how a consistent visual system could work for your business.",
     },
     relatedSlugs: ["social-media-marketing", "video-editing", "ai-ads"],
     order: 2,
@@ -342,7 +349,7 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     ],
     cta: {
       heading: "Turn Your Footage Into Video Worth Watching",
-      text: "Book a free consultation and send over a sample of your footage. I will explain how it could be edited to hold attention and support your goals.",
+      text: "Create a meeting and send over a sample of your footage. I will explain how it could be edited to hold attention and support your goals.",
     },
     relatedSlugs: ["graphic-design", "meta-ads", "ai-ads"],
     order: 3,
@@ -427,7 +434,7 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     ],
     cta: {
       heading: "Test More Ideas Without The Traditional Production Cost",
-      text: "Book a free consultation and I will show you what AI generated ad creative could look like for your business and your budget.",
+      text: "Create a meeting and I will show you what AI generated ad creative could look like for your business and your budget.",
     },
     relatedSlugs: ["meta-ads", "video-editing", "graphic-design"],
     order: 4,
@@ -512,7 +519,7 @@ export const servicePages: ServicePage[] = z.array(servicePageSchema).parse([
     ],
     cta: {
       heading: "Replace The Systems Holding Your Business Back",
-      text: "Book a free consultation and describe what your business actually needs. I will explain what a custom website or business system could look like, and how AI assisted development could get it built faster.",
+      text: "Create a meeting and describe what your business actually needs. I will explain what a custom website or business system could look like, and how AI assisted development could get it built faster.",
     },
     relatedSlugs: ["graphic-design", "social-media-marketing", "meta-ads"],
     order: 5,

@@ -29,7 +29,7 @@ export async function generateMetadata({
 
   const { brand } = data;
   return buildMetadata({
-    title: `${brand.name} — Video Content`,
+    title: `${brand.name} | Video Content`,
     description: `${brand.itemCount} videos produced for ${brand.name} (${brand.industry}) by Muhammad Umaid Sadiq. ${brand.blurb}`,
     path: `${BASE}/${brand.slug}`,
   });
@@ -59,7 +59,7 @@ export default async function VideoBrandPage({
   const galleryJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `${brand.name} — Video Content`,
+    name: `${brand.name} | Video Content`,
     description: brand.blurb,
     url: new URL(path, siteMeta.url).toString(),
     author: { "@type": "Person", name: siteMeta.name },

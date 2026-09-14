@@ -27,7 +27,7 @@ export function Hero() {
           <div className="order-2 md:order-1">
             <h1 className="font-display font-semibold uppercase leading-[0.86] tracking-[-0.02em]">
               <span className="sr-only">
-                Muhammad Umaid Sadiq — Digital Marketing Expert
+                Muhammad Umaid Sadiq, Digital Marketing Expert
               </span>
               <span className="hero-rise block text-[clamp(3.25rem,11vw,9rem)]">
                 Umaid
@@ -38,7 +38,7 @@ export function Hero() {
             </h1>
 
             <p className="hero-fade mt-7 max-w-md text-lg leading-relaxed text-ink-soft">
-              I&apos;m Muhammad Umaid Sadiq — a digital marketing expert helping
+              I&apos;m Muhammad Umaid Sadiq, a digital marketing expert helping
               businesses across Pakistan, the UAE, UK, Canada, and the USA grow
               online, from brand and content to web, SEO, and software.
             </p>

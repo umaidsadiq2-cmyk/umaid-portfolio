@@ -30,7 +30,7 @@ export function WorkCard({ item, delay = 0 }: { item: PortfolioItem; delay?: num
             {item.title}
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-            <span className="text-muted">Delivered — </span>
+            <span className="text-muted">Delivered:</span>
             {item.delivered}
           </p>
           {item.result && (

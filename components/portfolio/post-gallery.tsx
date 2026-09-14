@@ -43,7 +43,7 @@ export function PostGallery({ posts }: { posts: CreativePost[] }) {
               onClick={() => setOpen(i)}
               aria-label={
                 post.isCarousel
-                  ? `Open carousel — ${post.slides.length} slides`
+                  ? `Open carousel with ${post.slides.length} slides`
                   : "Open post"
               }
               className="group relative block aspect-square w-full overflow-hidden rounded-lg border border-line bg-canvas transition-[transform,box-shadow,border-color] duration-500 ease-out hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_28px_60px_-36px_rgba(11,16,14,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald"

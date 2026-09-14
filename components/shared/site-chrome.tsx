@@ -10,6 +10,7 @@ import { Cursor } from "@/components/motion/cursor";
 import { Grain } from "@/components/motion/grain";
 import { AmbientPointer } from "@/components/motion/ambient-pointer";
 import { PageTransition } from "@/components/motion/page-transition";
+import { MeetingDialog } from "@/components/meeting/meeting-dialog";
 
 /**
  * Public-site chrome — navbar, footer, and the whole motion layer.
@@ -57,6 +58,7 @@ export function SiteChrome({
       <Grain />
       <AmbientPointer />
       <PageTransition />
+      <MeetingDialog />
       {floatingCta}
     </>
   );

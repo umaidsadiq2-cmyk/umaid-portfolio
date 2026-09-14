@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { MeetingButton } from "@/components/meeting/meeting-button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Button } from "@/components/ui/button";
-import { conversion } from "@/content/site";
 
 /** The six disciplines, as the Section 2 marquee line. */
 const DISCIPLINES = [
@@ -378,9 +377,7 @@ export function CinemaHero() {
           </ul>
 
           <div className="mt-10">
-            <Button href={conversion.bookingUrl} size="lg">
-              Hire Me
-            </Button>
+            <MeetingButton size="lg">Hire Me</MeetingButton>
           </div>
         </div>
       </div>

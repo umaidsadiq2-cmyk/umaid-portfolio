@@ -46,7 +46,7 @@ const CARDS: ServiceCard[] = [
     name: "Video Editing",
     slug: "video-editing",
     blurb:
-      "Reels and brand films cut for retention — pacing, captions, and motion that hold attention to the last frame.",
+      "Reels and brand films cut for retention, with pacing, captions, and motion that hold attention to the last frame.",
     image: "/images/services/video-editing.webp",
   },
   {

@@ -21,13 +21,13 @@ const DEFAULT_OG_IMAGE = {
   url: new URL("/images/umaid2.webp", siteMeta.url).toString(),
   width: 582,
   height: 1396,
-  alt: `${siteMeta.name} — ${siteMeta.role}`,
+  alt: `${siteMeta.name}, ${siteMeta.role}`,
 };
 
 /** Per-route metadata builder (titles, canonical, OG, Twitter). */
 export function buildMetadata({ title, description, path = "/" }: PageSeo): Metadata {
   const url = new URL(path, siteMeta.url).toString();
-  const fullTitle = title ? `${title} — ${siteMeta.shortName}` : `${siteMeta.name} — ${siteMeta.role}`;
+  const fullTitle = title ? `${title} | ${siteMeta.shortName}` : `${siteMeta.name} | ${siteMeta.role}`;
   const desc = description ?? siteMeta.description;
 
   return {

@@ -8,10 +8,10 @@ export const profile: Profile = profileSchema.parse({
   name: "Muhammad Umaid Sadiq",
   title: "Digital Growth Partner",
   tagline:
-    "I build and grow the entire digital presence of ambitious businesses — under one standard.",
+    "I build and grow the entire digital presence of ambitious businesses, all under one standard.",
   bio: "I help founders and teams turn a scattered online presence into a system that compounds. From the first design to the last line of code, everything is built to one standard: yours, raised.",
   philosophy:
-    "Great digital work isn't a stack of services — it's one coherent system. When design, content, web, and SEO pull in the same direction, growth stops being a guess.",
+    "Great digital work isn't a stack of services. It's one coherent system. When design, content, web, and SEO pull in the same direction, growth stops being a guess.",
   expertise: [
     "Brand & Visual Identity",
     "Content Strategy",
@@ -25,7 +25,7 @@ export const profile: Profile = profileSchema.parse({
       order: 0,
       title: "Listen",
       description:
-        "We start with your business, not a template — goals, customers, and what growth actually means for you.",
+        "We start with your business, not a template: your goals, customers, and what growth actually means for you.",
     },
     {
       order: 1,
@@ -37,7 +37,7 @@ export const profile: Profile = profileSchema.parse({
       order: 2,
       title: "Build to standard",
       description:
-        "Production-grade work — fast, accessible, on-brand — shipped without cutting corners.",
+        "Production-grade work that is fast, accessible, and on-brand, shipped without cutting corners.",
     },
     {
       order: 3,

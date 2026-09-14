@@ -34,7 +34,7 @@ export async function generateMetadata({
 
   const { brand } = data;
   return buildMetadata({
-    title: `${brand.name} — Social Media Creatives`,
+    title: `${brand.name} | Social Media Creatives`,
     description: `${brand.itemCount} social media creatives designed for ${brand.name} (${brand.industry}) by Muhammad Umaid Sadiq. ${brand.blurb}`,
     path: `${BASE}/${brand.slug}`,
   });
@@ -65,7 +65,7 @@ export default async function CompanyPortfolioPage({
   const galleryJsonLd = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
-    name: `${brand.name} — Social Media Creatives`,
+    name: `${brand.name} | Social Media Creatives`,
     description: brand.blurb,
     url: new URL(path, siteMeta.url).toString(),
     author: { "@type": "Person", name: siteMeta.name },

@@ -69,7 +69,7 @@ export default async function SocialMediaCreativesPage() {
       <PageHeader
         eyebrow="Social Media Creatives"
         title="Creative work, organised by industry."
-        intro="Pick an industry to see the social media creatives designed for it — and the kind of brands behind them."
+        intro="Pick an industry to see the social media creatives designed for it, and the kind of brands behind them."
         breadcrumb={
           <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.path }))} />
         }

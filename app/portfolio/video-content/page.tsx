@@ -71,7 +71,7 @@ export default async function VideoContentPage() {
       <PageHeader
         eyebrow="Video content"
         title="Video cut to hold attention to the last frame."
-        intro="Short-form and brand films engineered for watch-time, shares, and action — not just views."
+        intro="Short-form and brand films engineered for watch-time, shares, and action, not just views."
         breadcrumb={
           <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.path }))} />
         }

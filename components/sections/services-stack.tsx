@@ -58,7 +58,7 @@ export function ServicesStack() {
         </Reveal>
         <Reveal delay={120}>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            Keep scrolling — each service stacks on the last, the way a complete
+            Keep scrolling. Each service stacks on the last, the way a complete
             social presence is built.
           </p>
         </Reveal>

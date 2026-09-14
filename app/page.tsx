@@ -20,13 +20,13 @@ import { buildMetadata } from "@/lib/seo";
  */
 const base = buildMetadata({
   description:
-    "Muhammad Umaid Sadiq — digital marketing expert offering social media marketing, Meta ads, graphic design, video editing, AI ads, and AI powered web development for businesses in Pakistan, UAE, Saudi Arabia, the UK, USA, and Canada.",
+    "Muhammad Umaid Sadiq is a digital marketing expert offering social media marketing, Meta ads, graphic design, video editing, AI ads, and AI powered web development for businesses in Pakistan, UAE, Saudi Arabia, the UK, USA, and Canada.",
   path: "/",
 });
 
 export const metadata: Metadata = {
   ...base,
-  title: "Digital Marketing Expert | Umaid Sadiq — Social Media & Meta Ads",
+  title: "Umaid Sadiq | Digital Marketing Expert, Social Media & Meta Ads",
   openGraph: { ...base.openGraph, title: "Digital Marketing Expert | Umaid Sadiq" },
   twitter: { ...base.twitter, title: "Digital Marketing Expert | Umaid Sadiq" },
 };

@@ -9,6 +9,7 @@ import { services } from "@/content/services";
 import { conversion } from "@/content/site";
 import { whatsappLink, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { MeetingButton } from "@/components/meeting/meeting-button";
 
 const fieldBase =
   "w-full rounded-sm border border-line bg-canvas px-3.5 py-2.5 text-sm text-ink " +
@@ -44,13 +45,11 @@ export function ContactForm() {
           Message sent.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Thanks — I&apos;ll reply within one business day. Prefer to talk sooner?
+          Thanks! I&apos;ll reply within one business day. Prefer to talk sooner?
           Book a slot or message me directly.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Button href={conversion.bookingUrl} size="md">
-            Book a consultation
-          </Button>
+          <MeetingButton size="md">Create a meeting</MeetingButton>
           <Button
             href={whatsappLink(conversion.whatsapp.number, conversion.whatsapp.prefill)}
             variant="outline"

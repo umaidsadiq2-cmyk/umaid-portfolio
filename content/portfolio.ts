@@ -8,7 +8,7 @@ import { z } from "zod";
 export const portfolio: PortfolioItem[] = z.array(portfolioItemSchema).parse([
   {
     slug: "aurora-clinic-rebrand",
-    title: "Aurora Aesthetic Clinic — Brand & Web",
+    title: "Aurora Aesthetic Clinic: Brand & Web",
     category: "creative-design",
     serviceTags: ["graphic-design", "web-development", "seo"],
     challenge:
@@ -37,7 +37,7 @@ export const portfolio: PortfolioItem[] = z.array(portfolioItemSchema).parse([
   },
   {
     slug: "northwind-travel-campaign",
-    title: "Northwind Travel — Social Campaign",
+    title: "Northwind Travel: Social Campaign",
     category: "creative-design",
     serviceTags: ["social-media-marketing", "content-creation", "graphic-design"],
     challenge:
@@ -66,7 +66,7 @@ export const portfolio: PortfolioItem[] = z.array(portfolioItemSchema).parse([
   },
   {
     slug: "forge-ecommerce-reels",
-    title: "Forge Apparel — Short-Form Video",
+    title: "Forge Apparel: Short-Form Video",
     category: "video-content",
     serviceTags: ["video-editing", "content-creation"],
     challenge:
@@ -96,7 +96,7 @@ export const portfolio: PortfolioItem[] = z.array(portfolioItemSchema).parse([
   },
   {
     slug: "meridian-saas-launch",
-    title: "Meridian — Product Launch Film",
+    title: "Meridian: Product Launch Film",
     category: "video-content",
     serviceTags: ["video-editing", "graphic-design"],
     challenge:

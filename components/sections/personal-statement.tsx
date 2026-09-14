@@ -29,7 +29,7 @@ export function PersonalStatement() {
           <Reveal delay={80} rise>
             <p className="mt-6 font-display text-[clamp(1.75rem,3.4vw,3rem)] font-semibold leading-[1.08] tracking-tight">
               I build digital presence that earns{" "}
-              <span className="text-emerald">trust</span> — and turns attention
+              <span className="text-emerald">trust</span>, and turns attention
               into business.
             </p>
           </Reveal>
@@ -37,7 +37,7 @@ export function PersonalStatement() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
               For over five years I&apos;ve helped founders, clinics, agencies, and
               service businesses look credible and grow online. Not a pile of
-              disconnected services — one standard applied across brand, content,
+              disconnected services: one standard applied across brand, content,
               web, and SEO.
             </p>
           </Reveal>

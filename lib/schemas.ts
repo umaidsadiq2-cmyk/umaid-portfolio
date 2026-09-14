@@ -124,7 +124,7 @@ export const conversionConfigSchema = z.object({
   bookingUrl: z.string().url(),
   whatsapp: z.object({ number: z.string().min(1), prefill: z.string().min(1) }),
   email: z.string().email(),
-  primaryCtaLabel: z.string().min(1).default("Book a consultation"),
+  primaryCtaLabel: z.string().min(1).default("Create a meeting"),
 });
 
 export const navItemSchema = z.object({

@@ -11,7 +11,7 @@ const PATH = "/portfolio";
 export const metadata: Metadata = buildMetadata({
   title: "Work",
   description:
-    "Selected work by Muhammad Umaid Sadiq — social media creatives and video content, organised by client.",
+    "Selected work by Muhammad Umaid Sadiq, including social media creatives and video content.",
   path: PATH,
 });
 
@@ -40,7 +40,7 @@ export default function PortfolioPage() {
       <PageHeader
         eyebrow="Selected work"
         title="Work that earns trust before the first call."
-        intro="Two bodies of work — creative for social, and video built to hold attention. Pick one to see it client by client."
+        intro="Two bodies of work: creative for social, and video built to hold attention. Pick one to explore it."
         breadcrumb={
           <Breadcrumb items={crumbs.map((c) => ({ name: c.name, href: c.path }))} />
         }

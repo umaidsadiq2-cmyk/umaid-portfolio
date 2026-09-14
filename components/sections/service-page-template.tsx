@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/sections/page-header";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
+import { MeetingButton } from "@/components/meeting/meeting-button";
 import { conversion } from "@/content/site";
 import { getServicePage, servicePages } from "@/content/service-pages";
 import { whatsappLink } from "@/lib/utils";
@@ -244,9 +245,9 @@ export function ServicePageTemplate({ page }: { page: ServicePage }) {
           </Reveal>
           <Reveal delay={160}>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button href={conversion.bookingUrl} size="lg">
+              <MeetingButton size="lg" service={page.name}>
                 {conversion.primaryCtaLabel}
-              </Button>
+              </MeetingButton>
               <Button
                 href={whatsappLink(conversion.whatsapp.number, conversion.whatsapp.prefill)}
                 variant="outline"

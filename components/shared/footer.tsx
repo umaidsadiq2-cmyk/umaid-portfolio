@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { nav, conversion, siteMeta } from "@/content/site";
 import { profile } from "@/content/profile";
+import { MeetingTextButton } from "@/components/meeting/meeting-button";
 import { servicePages } from "@/content/service-pages";
 import { whatsappLink } from "@/lib/utils";
 
@@ -67,14 +68,9 @@ export function Footer() {
             <p className="eyebrow mb-4">Get in touch</p>
             <ul className="space-y-2.5">
               <li>
-                <a
-                  href={conversion.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline text-sm text-ink-soft transition-colors hover:text-emerald"
-                >
-                  Book a consultation
-                </a>
+                <MeetingTextButton className="link-underline text-left text-sm text-ink-soft transition-colors hover:text-emerald">
+                  Create a meeting
+                </MeetingTextButton>
               </li>
               <li>
                 <a

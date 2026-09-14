@@ -34,10 +34,10 @@ export const industries: Industry[] = [
     slug: "automotive",
     label: "Automotive",
     description:
-      "I have designed social media creatives for automotive brands, including vehicle lubricant manufacturers and automotive rubber parts manufacturers and exporters — product-hero posts, performance messaging, and distributor campaigns for brands like Ignitol, Mileage Master, Apex Drive, and Nexon across the UAE and Canada.",
+      "I have designed social media creatives for automotive brands, including vehicle lubricant manufacturers and automotive rubber parts manufacturers and exporters. The work includes product-hero posts, performance messaging, and distributor campaigns for brands like Ignitol, Mileage Master, Apex Drive, and Nexon across the UAE and Canada.",
     posters: [
       poster("automotive-posters/04.webp", 1280, 1600, "Engine oil social media ad creatives for Mileage Master, Apex Drive, Ignitol and Nexon lubricants"),
-      poster("automotive-posters/01.webp", 1080, 1350, "Ignitol engine oil Instagram feed — Force and Ultimus motorcycle oil posts"),
+      poster("automotive-posters/01.webp", 1080, 1350, "Ignitol engine oil Instagram feed with Force and Ultimus motorcycle oil posts"),
       poster("automotive-posters/02.webp", 1080, 1350, "Ignitol Force motorcycle engine oil social media creatives"),
       poster("automotive-posters/03.webp", 790, 988, "Automotive lubricant social media poster design"),
       poster("automotive-posters/05.webp", 1080, 1350, "Ignitol lubricant brand social media post grid"),
@@ -48,20 +48,20 @@ export const industries: Industry[] = [
     slug: "drinks-ice-cream",
     label: "Drinks & Ice Cream",
     description:
-      "I have designed social media creatives for beverage and dessert brands — bubble tea, ice cream, and chilled drinks — from colourful, youth-focused campaign grids for Jolly to AI product photoshoots for Nescafé Chilled Mocha that make the product the hero of every frame.",
+      "I have designed social media creatives for beverage and dessert brands, including bubble tea, ice cream, and chilled drinks. The work ranges from colourful, youth-focused campaign grids for Jolly to AI product photoshoots for Nescafé Chilled Mocha that make the product the hero of every frame.",
     posters: [
-      poster("social-media-posters/01.webp", 1280, 1600, "Jolly drinks and ice cream social media post series — bubble tea, mango delight and blue slush creatives"),
-      poster("ai-photoshoot/01.webp", 1080, 1350, "AI product photoshoot — Nescafé Chilled Mocha bottle with floating chocolate, coffee beans and ice"),
-      poster("ai-photoshoot/02.webp", 1080, 1350, "AI product photography — Nescafé Chilled Mocha splash concept"),
+      poster("social-media-posters/01.webp", 1280, 1600, "Jolly drinks and ice cream social media post series with bubble tea, mango delight and blue slush creatives"),
+      poster("ai-photoshoot/01.webp", 1080, 1350, "AI product photoshoot of a Nescafé Chilled Mocha bottle with floating chocolate, coffee beans and ice"),
+      poster("ai-photoshoot/02.webp", 1080, 1350, "Nescafé Chilled Mocha splash concept, AI product photography"),
       poster("ai-photoshoot/03.webp", 1080, 1350, "AI-generated Nescafé Chilled Mocha product shot with coffee pour"),
-      poster("ai-photoshoot/04.webp", 1080, 1350, "AI product photoshoot — iced mocha drink advertising visual"),
+      poster("ai-photoshoot/04.webp", 1080, 1350, "Iced mocha drink advertising visual from an AI product photoshoot"),
     ],
   },
   {
     slug: "health-care",
     label: "Health Care",
     description:
-      "I have designed social media creatives for pharmaceutical and homeopathic healthcare brands, turning product benefits into clear, trustworthy posts — including launch campaigns for Sonexo's CIMI, Renalus, and NORM syrups that explain what each product does and who it helps.",
+      "I have designed social media creatives for pharmaceutical and homeopathic healthcare brands, turning product benefits into clear, trustworthy posts, including launch campaigns for Sonexo's CIMI, Renalus, and NORM syrups that explain what each product does and who it helps.",
     posters: [
       poster("social-media-posters/02.webp", 1280, 1600, "Sonexo healthcare social media posts for CIMI, Renalus and NORM elixir syrups"),
     ],
@@ -70,10 +70,10 @@ export const industries: Industry[] = [
     slug: "perfume",
     label: "Perfume",
     description:
-      "I have designed social media creatives for fragrance brands — luxury lifestyle campaigns for Perfumistan, and AI-generated product photoshoots that place a bottle anywhere, from underwater to desert dunes, without the cost of a physical shoot.",
+      "I have designed social media creatives for fragrance brands, including luxury lifestyle campaigns for Perfumistan, and AI-generated product photoshoots that place a bottle anywhere, from underwater to desert dunes, without the cost of a physical shoot.",
     posters: [
-      poster("social-media-posters/03.webp", 1280, 1600, "Perfumistan luxury perfume social media campaign — eau de parfum bottle in nature and desert scenes"),
-      poster("ai-photoshoot/05.webp", 1080, 1350, "AI perfume photoshoot — fragrance bottle held underwater with bubbles"),
+      poster("social-media-posters/03.webp", 1280, 1600, "Perfumistan luxury perfume social media campaign with an eau de parfum bottle in nature and desert scenes"),
+      poster("ai-photoshoot/05.webp", 1080, 1350, "AI perfume photoshoot of a fragrance bottle held underwater with bubbles"),
       poster("ai-photoshoot/06.webp", 1080, 1350, "AI perfume product photography concept"),
       poster("ai-photoshoot/07.webp", 1080, 1350, "AI-generated luxury perfume advertising shot"),
       poster("ai-photoshoot/08.webp", 1080, 1350, "AI perfume product visual for social media"),
@@ -83,18 +83,18 @@ export const industries: Industry[] = [
     slug: "snacks",
     label: "Snacks",
     description:
-      "I have designed social media creatives for snack food brands, including the Snakitos nachos campaign for FM Foods — flavour-led, high-energy posts built around everyday moments like school breaks, road trips, and picnics.",
+      "I have designed social media creatives for snack food brands, including the Snakitos nachos campaign for FM Foods, with flavour-led, high-energy posts built around everyday moments like school breaks, road trips, and picnics.",
     posters: [
-      poster("social-media-posters/04.webp", 1600, 1327, "FM Foods Snakitos nachos social media ad creatives — salsa vs paprika campaign"),
+      poster("social-media-posters/04.webp", 1600, 1327, "FM Foods Snakitos nachos social media ad creatives for the salsa vs paprika campaign"),
     ],
   },
   {
     slug: "real-estate",
     label: "Real Estate",
     description:
-      "I have designed social media creatives for real estate developers and property marketing agencies, including Unit 4 Marketings in Lahore — project listings, investment messaging, and lead-generation posts that build trust with plot and home buyers.",
+      "I have designed social media creatives for real estate developers and property marketing agencies, including Unit 4 Marketings in Lahore, covering project listings, investment messaging, and lead-generation posts that build trust with plot and home buyers.",
     posters: [
-      poster("real-estate/01.webp", 1080, 1350, "Unit 4 Marketings real estate social media posts — residential plot projects in Lahore"),
+      poster("real-estate/01.webp", 1080, 1350, "Unit 4 Marketings real estate social media posts for residential plot projects in Lahore"),
     ],
   },
 ];
@@ -113,7 +113,7 @@ const VIDEO: StaticVideoBrand[] = [
     name: "AI Video Ads",
     industry: "AI Advertising",
     blurb:
-      "Product and brand commercials produced with AI video tools — cinematic visuals and motion at a fraction of a traditional shoot's cost and turnaround.",
+      "Product and brand commercials produced with AI video tools, delivering cinematic visuals and motion at a fraction of a traditional shoot's cost and turnaround.",
     accent: "#4c1d95",
     bgUrl: `${BASE}/ai-video-ads/01.jpg`,
     pinned: true,
@@ -125,7 +125,7 @@ const VIDEO: StaticVideoBrand[] = [
     name: "Video Ads",
     industry: "Video Editing",
     blurb:
-      "Short-form ads and reels edited for Meta, Instagram and TikTok — pacing, captions and motion built to hold attention and drive action.",
+      "Short-form ads and reels edited for Meta, Instagram and TikTok, with pacing, captions and motion built to hold attention and drive action.",
     accent: "#14532d",
     bgUrl: `${BASE}/video-ads/01.jpg`,
     pinned: false,
@@ -161,12 +161,12 @@ const VIDEO_COPY: Record<string, { label: string; description: string }> = {
   "ai-video-ads": {
     label: "AI Video Ads",
     description:
-      "I produce product and brand commercials with AI video tools — cinematic visuals and motion at a fraction of the cost and turnaround of a traditional shoot, ready for social, web, and paid campaigns.",
+      "I produce product and brand commercials with AI video tools, delivering cinematic visuals and motion at a fraction of the cost and turnaround of a traditional shoot, ready for social, web, and paid campaigns.",
   },
   "video-ads": {
     label: "Video Ads",
     description:
-      "I edit short-form video ads and reels for Meta, Instagram, and TikTok — pacing, captions, and motion built to hold attention in the first seconds and drive viewers to act.",
+      "I edit short-form video ads and reels for Meta, Instagram, and TikTok, with pacing, captions, and motion built to hold attention in the first seconds and drive viewers to act.",
   },
   "logo-animations": {
     label: "Logo Animation",

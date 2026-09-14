@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { MeetingButton } from "@/components/meeting/meeting-button";
 import { Photo } from "@/components/shared/photo";
 import { conversion } from "@/content/site";
 import { whatsappLink } from "@/lib/utils";
@@ -24,15 +25,13 @@ export function FinalCta() {
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
-                Book a free consultation and we&apos;ll map the fastest path to
-                growth for your business — no pressure, no jargon.
+                Create a meeting and we&apos;ll map the fastest path to growth
+                for your business. No pressure, no jargon.
               </p>
             </Reveal>
             <Reveal delay={160}>
               <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Button href={conversion.bookingUrl} size="lg">
-                  {conversion.primaryCtaLabel}
-                </Button>
+                <MeetingButton size="lg">{conversion.primaryCtaLabel}</MeetingButton>
                 <Button
                   href={whatsappLink(
                     conversion.whatsapp.number,
@@ -51,7 +50,7 @@ export function FinalCta() {
             <div data-anim="img-right" className="group">
               <Photo
                 src="/images/umaid2.webp"
-                alt="Muhammad Umaid Sadiq — let's work together"
+                alt="Portrait of Muhammad Umaid Sadiq, digital marketing expert"
                 label="umaid2"
                 width={1000}
                 height={1300}
