@@ -318,6 +318,15 @@
     html.hero-light [data-magnetic] {
       cursor: none;
     }
+    /*
+      The spotlight's dot sits beneath the text layer, so over "Hire Me" the
+      button covered it and there was no visible pointer at all. The hand
+      pointer shows exactly where a press will land.
+    */
+    html.hero-light .hire-me-zone,
+    html.hero-light .hire-me-zone button {
+      cursor: pointer;
+    }
   }
 
   /* Subtle dotted measure for the brand panel */

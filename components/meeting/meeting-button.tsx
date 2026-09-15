@@ -26,7 +26,7 @@ export function openMeeting(service?: string) {
  * (Enter / Space) keep using the normal click. preventDefault stops the
  * follow-up mouse events, so the dialog is not opened twice.
  */
-function openOnMousePress(e: ReactPointerEvent, service?: string) {
+export function openOnMousePress(e: ReactPointerEvent, service?: string) {
   if (e.pointerType !== "mouse" || e.button !== 0) return;
   e.preventDefault();
   openMeeting(service);
@@ -40,6 +40,7 @@ export function MeetingButton({
   variant,
   className,
   arrow,
+  magnetic,
 }: {
   children?: ReactNode;
   service?: string;
@@ -47,6 +48,7 @@ export function MeetingButton({
   variant?: "primary" | "outline" | "ghost";
   className?: string;
   arrow?: boolean;
+  magnetic?: boolean;
 }) {
   return (
     <Button
@@ -55,6 +57,7 @@ export function MeetingButton({
       variant={variant}
       className={className}
       arrow={arrow}
+      magnetic={magnetic}
       onPointerDown={(e) => openOnMousePress(e, service)}
       onClick={() => openMeeting(service)}
     >

@@ -31,6 +31,8 @@ type StyleProps = {
   children: ReactNode;
   /** Trailing arrow with a slide-on-hover micro-interaction. Default: true. */
   arrow?: boolean;
+  /** Pull toward the cursor on hover (data-magnetic). Default: true. */
+  magnetic?: boolean;
 };
 
 type ButtonProps = StyleProps &
@@ -50,6 +52,7 @@ export function Button(props: ButtonProps | LinkProps) {
     className,
     children,
     arrow = true,
+    magnetic = true,
     ...rest
   } = props;
   const classes = cn(base, variants[variant], sizes[size], className);
@@ -94,7 +97,7 @@ export function Button(props: ButtonProps | LinkProps) {
   return (
     <button
       className={classes}
-      data-magnetic
+      data-magnetic={magnetic ? "" : undefined}
       {...(rest as ComponentPropsWithoutRef<"button">)}
     >
       {content}
