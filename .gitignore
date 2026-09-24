@@ -47,3 +47,7 @@ yarn-error.log*
 /Portfolio
 /.omc
 .env*
+
+# Cloudflare (OpenNext)
+.open-next/
+.wrangler/

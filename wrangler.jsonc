@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Cloudflare Workers deployment (OpenNext adapter). The Next.js app is built
+  // with `opennextjs-cloudflare build`, which emits the worker plus the static
+  // assets (posters, videos, fonts) that Cloudflare serves directly.
+  "name": "umaidsadiq-com",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-21",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
