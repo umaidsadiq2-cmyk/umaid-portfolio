@@ -21,6 +21,12 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Lead delivery. The API key itself is a Worker secret (wrangler secret put
+  // RESEND_API_KEY), never a var, so it stays out of the repo.
+  "vars": {
+    "INQUIRY_TO": "hello@umaidsadiq.com",
+    "RESEND_FROM": "Umaid Sadiq Website <onboarding@resend.dev>"
+  },
   "observability": {
     "enabled": true
   }
