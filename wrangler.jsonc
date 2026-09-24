@@ -7,6 +7,16 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-09-21",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Both hosts hit the worker; middleware redirects the apex to www.
+  //
+  // Zone routes rather than custom domains: the zone still carries the A and
+  // CNAME records imported from the old host, and a custom domain refuses to
+  // take a hostname that already has records. A route intercepts the request at
+  // the edge before any origin fetch, so those stale records are never used.
+  "routes": [
+    { "pattern": "umaidsadiq.com/*", "zone_name": "umaidsadiq.com" },
+    { "pattern": "www.umaidsadiq.com/*", "zone_name": "umaidsadiq.com" }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

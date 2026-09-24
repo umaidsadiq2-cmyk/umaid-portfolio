@@ -2,10 +2,12 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Admin route guard + Supabase session refresh.
+ * Canonical host redirect + admin route guard + Supabase session refresh.
  *
- * Runs on /admin/* only, so public pages keep their static rendering path and
- * pay nothing for this. Two jobs:
+ * Every request passes through for the host check, which is a couple of string
+ * comparisons. Only /admin/* goes on to the Supabase work below, so public
+ * pages still pay nothing for it. Three jobs:
+ *   0. send the bare apex to www, the host every canonical tag declares
  *   1. refresh the Supabase auth cookie so long admin sessions don't expire
  *      mid-edit
  *   2. bounce unauthenticated requests to /admin/login
@@ -15,6 +17,26 @@ import { NextResponse, type NextRequest } from "next/server";
  * mutation independently calls `requireAdmin()`, and RLS backstops both.
  */
 export async function middleware(request: NextRequest) {
+  /*
+   * One canonical host. Every page declares https://www.umaidsadiq.com, so the
+   * bare apex must not serve the same pages under a second address, or search
+   * engines index both and split the ranking. Vercel used to do this redirect
+   * in its domain settings; on Cloudflare the app owns it.
+   */
+  const host = request.headers.get("host") ?? "";
+  if (host === "umaidsadiq.com") {
+    const url = new URL(request.url);
+    url.host = "www.umaidsadiq.com";
+    url.protocol = "https:";
+    url.port = "";
+    return NextResponse.redirect(url, 308);
+  }
+
+  // Everything below is the admin guard; public pages never reach it.
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -67,5 +89,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // The apex redirect has to see every page, so the matcher covers the whole
+  // site except Next's own asset routes, which carry no host decision.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
