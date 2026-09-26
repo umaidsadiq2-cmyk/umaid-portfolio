@@ -71,6 +71,7 @@ export function MeetingDialog() {
   statusRef.current = status;
   const nameRef = useRef<HTMLInputElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
+  const pressedBackdrop = useRef(false);
 
   useEffect(() => {
     const onOpen = (e: Event) => {
@@ -162,8 +163,26 @@ export function MeetingDialog() {
 
   if (!open) return null;
 
-  const backdropClose = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) close();
+  /*
+   * Closing on the backdrop takes a whole press: down and up both on the dim
+   * area outside the panel. Closing on the press alone would shut the dialog on
+   * any stray mouse event the opening press left behind, and it also closed the
+   * dialog when a visitor selected text inside it and released outside.
+   *
+   * Both handlers sit on the outer layer and read data-backdrop from the event
+   * target, so the scroll layer nested inside counts as backdrop too without a
+   * second pair of handlers fighting over the same flag.
+   */
+  const isBackdrop = (target: EventTarget | null) =>
+    target instanceof HTMLElement && target.dataset.backdrop !== undefined;
+
+  const backdropDown = (e: React.MouseEvent) => {
+    pressedBackdrop.current = isBackdrop(e.target);
+  };
+  const backdropUp = (e: React.MouseEvent) => {
+    const onBackdrop = pressedBackdrop.current && isBackdrop(e.target);
+    pressedBackdrop.current = false;
+    if (onBackdrop) close();
   };
 
   return (
@@ -172,11 +191,13 @@ export function MeetingDialog() {
       aria-modal="true"
       aria-labelledby="meeting-title"
       data-lenis-prevent
-      onMouseDown={backdropClose}
+      data-backdrop
+      onMouseDown={backdropDown}
+      onMouseUp={backdropUp}
       className="fixed inset-0 z-[300] overflow-y-auto overscroll-contain bg-ink/70 backdrop-blur-sm"
     >
       <div
-        onMouseDown={backdropClose}
+        data-backdrop
         className="flex min-h-full items-center justify-center p-4 sm:p-6"
       >
         <div className="relative w-full max-w-2xl rounded-lg border border-line bg-canvas p-6 shadow-2xl sm:p-9">

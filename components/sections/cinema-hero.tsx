@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MeetingButton, openOnMousePress } from "@/components/meeting/meeting-button";
+import { MeetingButton, MeetingPressArea } from "@/components/meeting/meeting-button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -382,16 +382,11 @@ export function CinemaHero() {
           {/* The slide is still easing when a visitor reaches for the button, so
               the press area reaches a little past its edges, and the button does
               not use the magnetic pull (it moved the target under the press). */}
-          <div
-            className="hire-me-zone mt-7 p-3"
-            onPointerDown={(e) => {
-              if (!(e.target as HTMLElement).closest("button")) openOnMousePress(e);
-            }}
-          >
+          <MeetingPressArea className="hire-me-zone mt-6 px-4 py-5">
             <MeetingButton size="lg" magnetic={false}>
               Hire Me
             </MeetingButton>
-          </div>
+          </MeetingPressArea>
         </div>
       </div>
     </section>
